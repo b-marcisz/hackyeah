@@ -5,6 +5,7 @@ import { Account } from './entities/account.entity';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AccountsService {
@@ -61,5 +62,19 @@ export class AccountsService {
     }
     await this.userRepository.delete(userId);
     return true;
+  }
+
+  async updateUser(accountName: string, userId: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) return null;
+    const user = account.users.find(u => u.id === userId);
+    if (!user) return null;
+
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+    return user;
   }
 }
