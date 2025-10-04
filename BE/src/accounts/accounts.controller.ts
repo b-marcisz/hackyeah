@@ -112,5 +112,27 @@ export class AccountsController {
     const exists = await this.accountsService.codeExists(accountName, code);
     return { exists };
   }
+
+  @Post(':accountName/users/:userId/sessions')
+  @ApiParam({ name: 'accountName', type: String, description: 'Account name' })
+  @ApiResponse({ status: 200, description: 'Session created' })
+  async createSession(
+    @Param('accountName') accountName: string,
+    @Param('userId') userId: string
+  ) {
+    const result = await this.accountsService.saveUserSession(accountName, userId);
+    return result;
+  }
+
+  @Get(':accountName/users/:userId/sessions/today')
+  @ApiParam({ name: 'accountName', type: String, description: 'Account name' })
+  @ApiParam({ name: 'userId', type: String, description: 'User ID' })
+  @ApiResponse({ status: 200, description: 'Session returned' })
+  async getTodaySession(
+    @Param('accountName') accountName: string,
+    @Param('userId') userId: string
+  ) {
+    return this.accountsService.getUserSessionToday(accountName, userId);
+  }
   
 }
