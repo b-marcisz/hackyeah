@@ -1,0 +1,109 @@
+{
+  "project": "Assential",
+  "description": "System treningu pamięci opartego na asocjacjach HAO (Bohater–Czynność–Przedmiot).",
+  "objectives": [
+    "Tworzenie mini-gier uczących powiązań liczbowych 0–99 w formacie Hero–Action–Object.",
+    "Wzmacnianie pamięci wizualnej, dźwiękowej i emocjonalnej poprzez grywalizację.",
+    "Automatyczna generacja i ewaluacja nowych mini-gier na podstawie feedbacku użytkowników."
+  ],
+  "tech_stack": {
+    "frontend": {
+      "framework": "Expo (React Native + React Native Web)",
+      "language": "TypeScript",
+      "ui_libraries": [
+        "expo-router",
+        "react-native-reanimated",
+        "moti",
+        "expo-av",
+        "expo-secure-store",
+        "react-query"
+      ],
+      "platforms": ["web", "ios", "android"],
+      "description": "Jedna baza kodu dla aplikacji webowej i mobilnej. Wersja web działa w przeglądarce i w Telegramie (mini-app)."
+    },
+    "backend": {
+      "framework": "NestJS",
+      "language": "TypeScript",
+      "database": "PostgreSQL",
+      "message_queue": "Redis + BullMQ",
+      "auth": "JWT + Telegram OAuth",
+      "api": ["REST", "GraphQL"],
+      "description": "API do obsługi gier, statystyk, kont użytkowników i głosowań nad skojarzeniami."
+    },
+    "ai_integration": {
+      "model": "GPT-5",
+      "provider": "OpenAI / Azure OpenAI",
+      "purpose": "Generowanie mini-gier, asocjacji HAO i dostosowywanie poziomu trudności w czasie rzeczywistym."
+    }
+  },
+  "agent_behaviour": {
+    "mode": "creator",
+    "generation_rules": [
+      "Każda mini-gra powinna być krótka (30–60 sekund) i emocjonalnie angażująca.",
+      "Używaj prostych, znanych postaci i czynności (np. James Bond – strzela – pistolet).",
+      "Każdy numer (0–99) ma przypisany zestaw Bohater–Czynność–Przedmiot.",
+      "Zachowaj natychmiastową informację zwrotną i prosty system punktacji.",
+      "Gry muszą działać płynnie w przeglądarce (React Native Web) i w aplikacji mobilnej (Expo)."
+    ]
+  },
+  "mini_games": [
+    {
+      "id": "match_hao",
+      "title": "Dopasuj Bohatera, Czynność i Przedmiot",
+      "mechanics": "gracz przeciąga karty, aby połączyć H-A-O; jeśli poprawnie – mini-animacja i dźwięk.",
+      "goal": "utrwalenie powiązania liczby z zestawem HAO.",
+      "difficulty_scale": "1–5",
+      "reward": "punkty + dźwięk + emocjonalne wzmocnienie",
+      "example": {
+        "number": 07,
+        "hero": "James Bond",
+        "action": "strzela",
+        "object": "pistolet"
+      }
+    },
+    {
+      "id": "memory_flash",
+      "title": "Zapamiętaj i Odgadnij",
+      "mechanics": "krótkie pokazanie sceny HAO; gracz musi rozpoznać, który element się zmienił.",
+      "goal": "trening pamięci krótkotrwałej i wizualnej rekonstrukcji.",
+      "reward": "animacja + punkt za fokus."
+    },
+    {
+      "id": "number_story",
+      "title": "Stwórz historię dla liczby",
+      "mechanics": "gracz wybiera H, A, O z listy i tworzy scenę; AI ocenia logikę i zapamiętywalność.",
+      "goal": "aktywizacja kreatywności i personalizacji skojarzeń.",
+      "reward": "feedback AI + zapis w notatniku pamięci."
+    },
+    {
+      "id": "speed_recall",
+      "title": "Szybkie przypomnienie",
+      "mechanics": "wyświetla się liczba; gracz w 2 sekundy musi rozpoznać HAO.",
+      "goal": "automatyzacja pamięci asocjacyjnej.",
+      "reward": "combo streak + efekty świetlne."
+    },
+    {
+      "id": "reverse_memory",
+      "title": "Odgadnij Liczbę",
+      "mechanics": "pokazuje się scena HAO; gracz wpisuje, jaka to liczba.",
+      "goal": "ćwiczenie odwrotnego mapowania HAO → liczba.",
+      "reward": "punkty i 'aha moment'."
+    }
+  ],
+  "progress_system": {
+    "xp_per_success": 10,
+    "levels": ["Nowicjusz", "Uczeń", "Ekspert", "Arcymnemotechnik"],
+    "streak_bonus": true
+  },
+  "ai_feedback_loop": {
+    "enabled": true,
+    "method": "po każdej sesji AI analizuje wyniki i proponuje nowe mini-gry lub modyfikuje istniejące.",
+    "metrics": ["czas reakcji", "dokładność", "emocjonalne zaangażowanie"]
+  },
+  "export": {
+    "api_schema": "openapi.yaml",
+    "frontend_target": "Expo + React Native Web",
+    "backend_target": "NestJS",
+    "telegram_miniapp": true
+  }
+}

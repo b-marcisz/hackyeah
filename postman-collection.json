@@ -1,0 +1,88 @@
+{
+  "info": {
+    "name": "Number Association API",
+    "description": "API for generating and managing number associations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Generate Association",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/number-associations/{{number}}/generate",
+          "host": ["{{baseUrl}}"],
+          "path": ["number-associations", "{{number}}", "generate"]
+        },
+        "description": "Generate a new association for a specific number"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Association",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/number-associations/{{number}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["number-associations", "{{number}}"]
+        },
+        "description": "Get the primary association for a specific number"
+      },
+      "response": []
+    },
+    {
+      "name": "Rate Association",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rating\": 5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/number-associations/{{associationId}}/rate",
+          "host": ["{{baseUrl}}"],
+          "path": ["number-associations", "{{associationId}}", "rate"]
+        },
+        "description": "Rate an existing association (rating should be between 1 and 5)"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "number",
+      "value": "42",
+      "type": "string"
+    },
+    {
+      "key": "associationId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
+

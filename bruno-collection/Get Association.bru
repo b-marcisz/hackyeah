@@ -1,0 +1,27 @@
+meta {
+  name: Get Association
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/number-associations/{{number}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:3000
+  number: 42
+}
+
+tests {
+  test("Get association", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property('id');
+    expect(res.getBody()).to.have.property('hero');
+    expect(res.getBody()).to.have.property('action');
+    expect(res.getBody()).to.have.property('object');
+    expect(res.getBody()).to.have.property('explanation');
+  });
+}
