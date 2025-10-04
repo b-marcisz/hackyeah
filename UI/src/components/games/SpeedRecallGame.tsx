@@ -23,7 +23,7 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
   const [timeElapsed, setTimeElapsed] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const association = gameState.association;
+  // const association = gameState.association;
   const attempts = gameState.attempts || 0;
 
   // Timer
@@ -45,7 +45,7 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
 
   const handleSubmit = async () => {
     if (!recallText.trim()) {
-      alert('Пожалуйста, введите ваш ответ');
+      alert('Proszę wprowadzić swoją odpowiedź');
       return;
     }
 
@@ -81,7 +81,7 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
     <div className="card">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          {gameState.prompt || `Вспомни ассоциацию для числа ${game.number}`}
+          {gameState.prompt || `Przypomnij sobie skojarzenie dla liczby ${game.number}`}
         </h2>
         <div className="text-6xl font-bold text-blue-600 mb-4">
           {game.number}
@@ -89,29 +89,29 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
         <div className="flex items-center justify-center space-x-4 text-lg text-gray-600">
           <div className="flex items-center space-x-2">
             <Clock className="h-5 w-5" />
-            <span>Время: {formatTime(timeElapsed)}</span>
+            <span>Czas: {formatTime(timeElapsed)}</span>
           </div>
           <div>
-            Попытки: {attempts}
+            Próby: {attempts}
           </div>
         </div>
       </div>
 
       <div className="mb-6">
         <label className="block text-lg font-semibold text-gray-700 mb-4">
-          Опишите ассоциацию для этого числа:
+          Opisz skojarzenie dla tej liczby:
         </label>
         <textarea
           ref={textareaRef}
           value={recallText}
           onChange={(e) => setRecallText(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Введите вашу ассоциацию здесь... (Ctrl+Enter для отправки)"
+          placeholder="Wprowadź swoje skojarzenie tutaj... (Ctrl+Enter aby wysłać)"
           className="w-full h-32 p-4 border-2 border-gray-300 rounded-lg resize-none focus:border-blue-500 focus:outline-none"
           disabled={isSubmitting}
         />
         <div className="text-right text-sm text-gray-500 mt-2">
-          {recallText.length} символов
+          {recallText.length} znaków
         </div>
       </div>
 
@@ -121,15 +121,15 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
           onClick={() => setShowHint(!showHint)}
           className="btn btn-secondary text-sm"
         >
-          {showHint ? 'Скрыть подсказку' : 'Показать подсказку'}
+          {showHint ? 'Ukryj podpowiedź' : 'Pokaż podpowiedź'}
         </button>
         
         {showHint && (
           <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 mb-2">Подсказка:</h4>
+            <h4 className="font-semibold text-yellow-800 mb-2">Podpowiedź:</h4>
             <p className="text-yellow-700">
-              Вспомните героя, действие и объект, связанные с числом {game.number}. 
-              Вы можете описать их в любом порядке и форме.
+              Przypomnij sobie bohatera, działanie i przedmiot związane z liczbą {game.number}. 
+              Możesz je opisać w dowolnej kolejności i formie.
             </p>
           </div>
         )}
@@ -145,12 +145,12 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
           {isSubmitting ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Отправка...</span>
+              <span>Wysyłanie...</span>
             </div>
           ) : (
             <>
               <Send className="h-5 w-5" />
-              Отправить ответ
+              Wyślij odpowiedź
             </>
           )}
         </button>
@@ -161,13 +161,13 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
           className="btn btn-secondary text-lg px-8 py-3"
         >
           <RotateCcw className="h-5 w-5" />
-          Очистить
+          Wyczyść
         </button>
       </div>
 
       {/* Instructions */}
       <div className="mt-6 text-center text-sm text-gray-500">
-        <p>💡 Совет: Опишите ассоциацию в свободной форме. Используйте Ctrl+Enter для быстрой отправки.</p>
+        <p>💡 Wskazówka: Opisz skojarzenie w dowolnej formie. Użyj Ctrl+Enter do szybkiego wysłania.</p>
       </div>
 
       {/* Speed Bonus Info */}
@@ -176,7 +176,7 @@ const SpeedRecallGame: React.FC<SpeedRecallGameProps> = ({
           <div className="inline-flex items-center space-x-2 text-green-600 bg-green-50 px-4 py-2 rounded-lg">
             <Clock className="h-4 w-4" />
             <span className="text-sm font-medium">
-              Бонус за скорость! Время: {formatTime(timeElapsed)}
+              Bonus za szybkość! Czas: {formatTime(timeElapsed)}
             </span>
           </div>
         </div>

@@ -20,7 +20,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
         </div>
         
         <h2 className="text-2xl font-bold text-red-600 mb-4">
-          Произошла ошибка
+          Wystąpił błąd
         </h2>
         
         <p className="text-gray-600 mb-6 text-lg">
@@ -34,7 +34,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
               className="btn btn-primary"
             >
               <RefreshCw className="h-4 w-4" />
-              Попробовать снова
+              Spróbuj ponownie
             </button>
           )}
           
@@ -44,7 +44,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
               className="btn btn-secondary"
             >
               <X className="h-4 w-4" />
-              Закрыть
+              Zamknij
             </button>
           )}
         </div>
