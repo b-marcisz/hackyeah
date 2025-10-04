@@ -10,7 +10,8 @@
       "Bash(npm install:*)",
       "Bash(npx tsc:*)",
       "WebSearch",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(npx tailwindcss:*)"
     ],
     "deny": [],
     "ask": []

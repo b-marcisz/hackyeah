@@ -1,6 +1,7 @@
 import {ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native';
 import {useState} from 'react';
 import UserAvatar from 'react-native-user-avatar';
+import { FontAwesome } from '@expo/vector-icons';
 
 export interface Profile {
   id: string;
@@ -11,9 +12,11 @@ export interface Profile {
 
 interface ProfileSelectionProps {
   onSelectProfile: (profile: Profile) => void;
+  onOpenSettings?: () => void;
+  onAddProfile?: () => void;
 }
 
-export default function ProfileSelection({ onSelectProfile }: ProfileSelectionProps) {
+export default function ProfileSelection({ onSelectProfile, onOpenSettings, onAddProfile }: ProfileSelectionProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
@@ -23,12 +26,24 @@ export default function ProfileSelection({ onSelectProfile }: ProfileSelectionPr
   ]);
 
   const handleAddProfile = () => {
-    // TODO: Implement add profile modal
-    console.log('Add profile clicked');
+    if (onAddProfile) {
+      onAddProfile();
+    }
   };
 
   return (
     <View style={styles.container}>
+      {/* Settings icon */}
+      {onOpenSettings && (
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={onOpenSettings}
+          activeOpacity={0.7}
+        >
+          <FontAwesome name="gear" size={32} color="rgba(255, 255, 255, 0.7)" />
+        </TouchableOpacity>
+      )}
+
       <Text style={[styles.title, isLandscape && styles.titleLandscape]}>Kto gra?</Text>
 
       <ScrollView
@@ -83,6 +98,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#141414',
     paddingTop: 60,
     paddingHorizontal: 20,
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 10,
+    padding: 10,
   },
   title: {
     fontSize: 48,
