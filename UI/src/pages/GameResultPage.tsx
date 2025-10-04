@@ -16,7 +16,7 @@ import {
 const GameResultPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
-  const { state, getGame, submitFeedback, clearError } = useGame();
+  const { state, getGame, submitFeedback } = useGame();
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [feedbackRating, setFeedbackRating] = useState<number | undefined>(undefined);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
@@ -30,7 +30,7 @@ const GameResultPage: React.FC = () => {
 
   const handleFeedbackSubmit = async () => {
     if (!feedbackMessage.trim()) {
-      alert('Пожалуйста, введите сообщение');
+      alert('Proszę wprowadzić wiadomość');
       return;
     }
 
@@ -74,11 +74,11 @@ const GameResultPage: React.FC = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'Поздравляем! Игра завершена успешно';
+        return 'Gratulacje! Gra zakończona pomyślnie';
       case 'failed':
-        return 'Игра не завершена. Попробуйте еще раз!';
+        return 'Gra nie została zakończona. Spróbuj ponownie!';
       default:
-        return 'Игра в процессе';
+        return 'Gra w toku';
     }
   };
 
@@ -98,7 +98,7 @@ const GameResultPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="card text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4" />
-          <p className="text-gray-600">Загрузка результатов...</p>
+          <p className="text-gray-600">Ładowanie wyników...</p>
         </div>
       </div>
     );
@@ -108,10 +108,10 @@ const GameResultPage: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="card text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Ошибка</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Błąd</h2>
           <p className="text-gray-600 mb-6">{state.error}</p>
           <button onClick={() => navigate('/')} className="btn btn-primary">
-            Вернуться на главную
+            Wróć do głównej
           </button>
         </div>
       </div>
@@ -122,10 +122,10 @@ const GameResultPage: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="card text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Игра не найдена</h2>
-          <p className="text-gray-600 mb-6">Игра с указанным ID не существует</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Gra nie została znaleziona</h2>
+          <p className="text-gray-600 mb-6">Gra o podanym ID nie istnieje</p>
           <button onClick={() => navigate('/')} className="btn btn-primary">
-            Вернуться на главную
+            Wróć do głównej
           </button>
         </div>
       </div>
@@ -144,7 +144,7 @@ const GameResultPage: React.FC = () => {
           className="btn btn-secondary mb-4"
         >
           <Home className="h-4 w-4" />
-          На главную
+          Do głównej
         </button>
       </div>
 
@@ -172,17 +172,17 @@ const GameResultPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="card text-center">
           <div className="text-4xl font-bold text-blue-600 mb-2">{game.points}</div>
-          <div className="text-gray-600">Очки</div>
+          <div className="text-gray-600">Punkty</div>
         </div>
         
         <div className="card text-center">
           <div className="text-4xl font-bold text-green-600 mb-2">{game.xp}</div>
-          <div className="text-gray-600">Опыт</div>
+          <div className="text-gray-600">Doświadczenie</div>
         </div>
         
         <div className="card text-center">
           <div className="text-4xl font-bold text-purple-600 mb-2">{game.difficulty}</div>
-          <div className="text-gray-600">Сложность</div>
+          <div className="text-gray-600">Trudność</div>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ const GameResultPage: React.FC = () => {
       {summary.isCorrect !== undefined && (
         <div className="card mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-            Результат
+            Wynik
           </h2>
           <div className="text-center">
             <div className={`inline-flex items-center space-x-2 px-6 py-3 rounded-lg text-lg font-medium ${
@@ -199,12 +199,12 @@ const GameResultPage: React.FC = () => {
               {summary.isCorrect ? (
                 <>
                   <ThumbsUp className="h-5 w-5" />
-                  <span>Правильно!</span>
+                  <span>Poprawnie!</span>
                 </>
               ) : (
                 <>
                   <Target className="h-5 w-5" />
-                  <span>Неправильно</span>
+                  <span>Niepoprawnie</span>
                 </>
               )}
             </div>
@@ -216,7 +216,7 @@ const GameResultPage: React.FC = () => {
       {result?.attempts && result.attempts.length > 0 && (
         <div className="card mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-            История попыток
+            Historia prób
           </h2>
           <div className="space-y-4">
             {result.attempts.map((attempt: any, index: number) => (
@@ -229,16 +229,16 @@ const GameResultPage: React.FC = () => {
                   </div>
                   <div>
                     <div className="font-medium">
-                      Попытка {index + 1}
+                      Próba {index + 1}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {attempt.timeSpentMs ? `${Math.round(attempt.timeSpentMs / 1000)}с` : 'Нет данных'}
+                      {attempt.timeSpentMs ? `${Math.round(attempt.timeSpentMs / 1000)}s` : 'Brak danych'}
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="font-medium text-blue-600">+{attempt.pointsAwarded}</div>
-                  <div className="text-sm text-gray-600">очков</div>
+                  <div className="text-sm text-gray-600">punktów</div>
                 </div>
               </div>
             ))}
@@ -249,19 +249,19 @@ const GameResultPage: React.FC = () => {
       {/* Feedback Section */}
       <div className="card mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-          Обратная связь
+          Opinia
         </h2>
         
         {!feedbackSubmitted ? (
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Сообщение
+                Wiadomość
               </label>
               <textarea
                 value={feedbackMessage}
                 onChange={(e) => setFeedbackMessage(e.target.value)}
-                placeholder="Поделитесь своими мыслями об игре..."
+                placeholder="Podziel się swoimi myślami o grze..."
                 className="w-full h-24 p-3 border border-gray-300 rounded-lg resize-none focus:border-blue-500 focus:outline-none"
                 disabled={isSubmittingFeedback}
               />
@@ -269,7 +269,7 @@ const GameResultPage: React.FC = () => {
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Оценка (опционально)
+                Ocena (opcjonalnie)
               </label>
               <div className="flex space-x-2">
                 {[1, 2, 3, 4, 5].map((rating) => (
@@ -298,12 +298,12 @@ const GameResultPage: React.FC = () => {
                 {isSubmittingFeedback ? (
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                    <span>Отправка...</span>
+                    <span>Wysyłanie...</span>
                   </div>
                 ) : (
                   <>
                     <MessageSquare className="h-4 w-4" />
-                    Отправить отзыв
+                    Wyślij opinię
                   </>
                 )}
               </button>
@@ -312,7 +312,7 @@ const GameResultPage: React.FC = () => {
         ) : (
           <div className="text-center text-green-600 bg-green-50 p-4 rounded-lg">
             <ThumbsUp className="h-8 w-8 mx-auto mb-2" />
-            <p className="font-medium">Спасибо за отзыв!</p>
+            <p className="font-medium">Dziękujemy za opinię!</p>
           </div>
         )}
       </div>
@@ -324,7 +324,7 @@ const GameResultPage: React.FC = () => {
           className="btn btn-primary text-lg px-8 py-3"
         >
           <Home className="h-5 w-5" />
-          Новая игра
+          Nowa gra
         </button>
         
         <button
@@ -332,7 +332,7 @@ const GameResultPage: React.FC = () => {
           className="btn btn-secondary text-lg px-8 py-3"
         >
           <RotateCcw className="h-5 w-5" />
-          Попробовать снова
+          Spróbuj ponownie
         </button>
       </div>
     </div>

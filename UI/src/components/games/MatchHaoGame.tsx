@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GameResponse, GameState } from '../../types';
 import { useGame } from '../../contexts/GameContext';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface MatchHaoGameProps {
   game: GameResponse;
@@ -22,12 +22,12 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
   const [selectedObject, setSelectedObject] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const association = gameState.association;
+  // const association = gameState.association;
   const categories = gameState.categories || { hero: [], action: [], object: [] };
 
   const handleSubmit = async () => {
     if (!selectedHero || !selectedAction || !selectedObject) {
-      alert('Пожалуйста, выберите все три элемента');
+      alert('Proszę wybrać wszystkie trzy elementy');
       return;
     }
 
@@ -55,7 +55,7 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
     <div className="card">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          {gameState.prompt || `Подбери героя, действие и объект для числа ${game.number}`}
+          {gameState.prompt || `Dopasuj bohatera, działanie i obiekt do liczby ${game.number}`}
         </h2>
         <div className="text-6xl font-bold text-blue-600 mb-4">
           {game.number}
@@ -66,7 +66,7 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
         {/* Hero Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Герой
+            Bohater
           </h3>
           <div className="space-y-2">
             {categories.hero.map((hero, index) => (
@@ -93,7 +93,7 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
         {/* Action Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Действие
+            Działanie
           </h3>
           <div className="space-y-2">
             {categories.action.map((action, index) => (
@@ -120,7 +120,7 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
         {/* Object Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Объект
+            Przedmiot
           </h3>
           <div className="space-y-2">
             {categories.object.map((object, index) => (
@@ -149,7 +149,7 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
       {isComplete && (
         <div className="bg-gray-50 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-            Ваша комбинация:
+            Twoja kombinacja:
           </h3>
           <div className="text-center text-xl">
             <span className="font-bold text-blue-600">{selectedHero}</span>
@@ -171,17 +171,17 @@ const MatchHaoGame: React.FC<MatchHaoGameProps> = ({
           {isSubmitting ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Отправка...</span>
+              <span>Wysyłanie...</span>
             </div>
           ) : (
-            'Проверить ответ'
+            'Sprawdź odpowiedź'
           )}
         </button>
       </div>
 
       {/* Hint */}
       <div className="mt-6 text-center text-sm text-gray-500">
-        <p>Выберите по одному элементу из каждой категории</p>
+        <p>Wybierz po jednym elemencie z każdej kategorii</p>
       </div>
     </div>
   );
