@@ -75,7 +75,7 @@ export class NumberAssociationController {
     try {
       const result = await this.numberAssociationService.generateAllAssociations();
       return {
-        message: 'Successfully generated associations for numbers 0-99',
+        message: 'Successfully generated next 10 associations',
         count: result,
       };
     } catch (error) {
@@ -87,7 +87,7 @@ export class NumberAssociationController {
   }
 
   @Get('all/primary')
-  async getAllPrimaryAssociations(): Promise<NumberAssociation[]> {
+  async getAllPrimaryAssociations(): Promise<Partial<NumberAssociation>[]> {
     try {
       return await this.numberAssociationService.getAllPrimaryAssociations();
     } catch (error) {
