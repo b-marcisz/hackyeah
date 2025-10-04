@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEnum, IsOptional, IsInt, IsObject } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsInt, IsObject, Matches } from 'class-validator';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -21,6 +21,12 @@ export class UserSettings {
   }
 
 export class CreateUserDto {
+
+  @ApiProperty({ description: 'Czterocyfrowy kod, np. 0013' })
+  @IsString()
+  @Matches(/^\d{4}$/, { message: 'code must be a 4-digit number string (e.g. 0013)' })
+  code: string;
+
   @ApiProperty()
   @IsString()
   name: string;
