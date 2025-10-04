@@ -1,24 +1,23 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+import SplashScreen from './src/screens/SplashScreen';
 import ProfileSelection, { Profile } from './src/screens/ProfileSelection';
 import GameDashboard from './src/screens/GameDashboard';
 import MemoryGame from './src/games/MemoryGame';
 import PinEntry from './src/screens/PinEntry';
 import AdminPanel from './src/screens/AdminPanel';
 import TimeLimitReached from './src/screens/TimeLimitReached';
+import { useProfiles } from './src/hooks/useProfiles';
 
-type Screen = 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
+type Screen = 'splash' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('profile-selection');
+  const [currentScreen, setCurrentScreen] = useState<Screen>('splash');
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [adminTab, setAdminTab] = useState<'settings' | 'add-profile'>('settings');
 
-  // Mock profiles list for admin panel
-  const profiles: Profile[] = [
-    { id: '1', name: 'Kasia', type: 'child', color: '#F093FB' },
-    { id: '2', name: 'Tomek', type: 'child', color: '#4FACFE' },
-  ];
+  // Fetch profiles from API
+  const { profiles, refreshProfiles } = useProfiles();
 
   const handleSelectProfile = (profile: Profile) => {
     setSelectedProfile(profile);
@@ -63,8 +62,14 @@ export default function App() {
     setCurrentScreen('time-limit-reached');
   };
 
+  const handleSplashContinue = () => {
+    setCurrentScreen('profile-selection');
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
+      case 'splash':
+        return <SplashScreen onContinue={handleSplashContinue} />;
       case 'profile-selection':
         return (
           <ProfileSelection
@@ -102,6 +107,7 @@ export default function App() {
             profiles={profiles}
             onBack={handleBackFromAdmin}
             initialTab={adminTab}
+            onProfileAdded={refreshProfiles}
           />
         );
       case 'time-limit-reached':

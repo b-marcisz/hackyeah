@@ -26,13 +26,13 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
     { id: 'memory-less', name: 'Memory Less', iconImage: require('../../assets/memory/memory-loss.png'), color: '#4FACFE' },
   ];
 
-  const handleSelectGame = (gameId: string) => {
+  const handleSelectGame = useCallback((gameId: string) => {
     if (gameId === 'back') {
       onBackToProfiles();
     } else {
       onSelectGame(gameId);
     }
-  };
+  }, [onBackToProfiles, onSelectGame]);
 
   // Gamepad/Keyboard navigation
   const handleNavigationButton = useCallback((button: string) => {
@@ -51,7 +51,7 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
     } else if (button === 'a') {
       handleSelectGame(games[selectedIndex]?.id || '');
     }
-  }, [selectedIndex, games, isLandscape]);
+  }, [selectedIndex, games, isLandscape, handleSelectGame]);
 
   // Gamepad support (web only)
   useEffect(() => {
@@ -102,10 +102,10 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={[styles.greeting, isLandscape && styles.greetingLandscape]}>
-          Cześć {profile.name}! 👋
+          Hi {profile.name}! 👋
         </Text>
         <Text style={[styles.subtitle, isLandscape && styles.subtitleLandscape]}>
-          W co chcesz zagrać?
+          What do you want to play?
         </Text>
       </View>
 

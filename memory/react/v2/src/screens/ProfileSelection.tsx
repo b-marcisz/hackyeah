@@ -1,13 +1,17 @@
-import {ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View, ActivityIndicator} from 'react-native';
 import {useState} from 'react';
 import UserAvatar from 'react-native-user-avatar';
 import { FontAwesome } from '@expo/vector-icons';
+import { useProfiles } from '../hooks/useProfiles';
 
 export interface Profile {
   id: string;
   name: string;
   type: 'parent' | 'child';
   color: string;
+  role?: 'admin' | 'user'; // From backend
+  age?: number; // From backend
+  accountId?: string; // From backend
 }
 
 interface ProfileSelectionProps {
@@ -20,10 +24,8 @@ export default function ProfileSelection({ onSelectProfile, onOpenSettings, onAd
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
-  const [profiles, setProfiles] = useState<Profile[]>([
-    { id: '1', name: 'Kasia', type: 'child', color: '#F093FB' },
-    { id: '2', name: 'Tomek', type: 'child', color: '#4FACFE' },
-  ]);
+  // Fetch profiles from API
+  const { profiles, loading, error, refreshProfiles } = useProfiles();
 
   const handleAddProfile = () => {
     if (onAddProfile) {
@@ -44,16 +46,38 @@ export default function ProfileSelection({ onSelectProfile, onOpenSettings, onAd
         </TouchableOpacity>
       )}
 
-      <Text style={[styles.title, isLandscape && styles.titleLandscape]}>Kto gra?</Text>
+      <Text style={[styles.title, isLandscape && styles.titleLandscape]}>Who's playing?</Text>
 
-      <ScrollView
-        contentContainerStyle={[
-          styles.profilesContainer,
-          isLandscape && styles.profilesContainerLandscape
-        ]}
-        showsVerticalScrollIndicator={false}
-      >
-        {profiles.map((profile) => (
+      {/* Loading indicator */}
+      {loading && (
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color="#4FACFE" />
+          <Text style={styles.loadingText}>Loading profiles...</Text>
+        </View>
+      )}
+
+      {/* Error message */}
+      {error && !loading && (
+        <View style={styles.errorContainer}>
+          <FontAwesome name="exclamation-circle" size={48} color="#FF6B9D" />
+          <Text style={styles.errorText}>Could not load profiles</Text>
+          <Text style={styles.errorSubtext}>Using offline data</Text>
+        </View>
+      )}
+
+      {/* Profiles list */}
+      {!loading && (
+        <ScrollView
+          horizontal={isLandscape && profiles.length > 3}
+          contentContainerStyle={[
+            styles.profilesContainer,
+            isLandscape && styles.profilesContainerLandscape,
+            isLandscape && profiles.length > 3 && styles.profilesContainerHorizontal
+          ]}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          {profiles.map((profile) => (
           <TouchableOpacity
             key={profile.id}
             style={[
@@ -85,9 +109,10 @@ export default function ProfileSelection({ onSelectProfile, onOpenSettings, onAd
           activeOpacity={0.8}
         >
           <Text style={styles.addIcon}>+</Text>
-          <Text style={styles.addText}>Dodaj profil</Text>
+          <Text style={styles.addText}>Add profile</Text>
         </TouchableOpacity>
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -128,6 +153,10 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 25,
     alignItems: 'center',
+  },
+  profilesContainerHorizontal: {
+    flexWrap: 'nowrap',
+    paddingHorizontal: 20,
   },
   profileCard: {
     width: 180,
@@ -180,6 +209,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '600',
+    textAlign: 'center',
+  },
+  centerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 15,
+  },
+  loadingText: {
+    fontSize: 18,
+    color: 'rgba(255, 255, 255, 0.7)',
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingHorizontal: 40,
+  },
+  errorText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    textAlign: 'center',
+  },
+  errorSubtext: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.6)',
     textAlign: 'center',
   },
 });
