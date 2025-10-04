@@ -29,11 +29,6 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsInt()
-  age?: number;
-
   @ApiProperty({ enum: ['pinkPurple', 'blue', 'green', 'pink', 'orange', 'lavender'], required: false })
   @IsOptional()
   @IsEnum(['pinkPurple', 'blue', 'green', 'pink', 'orange', 'lavender'])
