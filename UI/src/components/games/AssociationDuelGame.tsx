@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GameResponse, GameState } from '../../types';
 import { useGame } from '../../contexts/GameContext';
 import { Swords, Clock, Target, Zap } from 'lucide-react';
@@ -27,7 +27,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [maxStreak, setMaxStreak] = useState(0);
-  const [rounds, setRounds] = useState(5);
+  const [rounds] = useState(5);
   const [completedRounds, setCompletedRounds] = useState<Array<{
     number: number;
     hero: string;
@@ -36,6 +36,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
     timeSpent: number;
     isCorrect: boolean;
   }>>([]);
+  const [roundStartTime, setRoundStartTime] = useState<number | null>(null);
 
   const association = gameState.association;
   const categories = gameState.categories || { 
@@ -44,27 +45,14 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
     object: [association.object] 
   };
 
-  // Timer for each round
-  useEffect(() => {
-    if (timeLeft > 0 && !isSubmitting) {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      // Time's up - submit empty answer
-      handleSubmit(true);
-    }
-  }, [timeLeft, isSubmitting]);
-
-  const handleSubmit = async (timeUp = false) => {
+  const handleSubmit = useCallback(async (timeUp = false) => {
     if (!timeUp && (!selectedHero || !selectedAction || !selectedObject)) {
-      alert('Пожалуйста, выберите все три элемента');
+      alert('Proszę wybrać wszystkie trzy elementy');
       return;
     }
 
     setIsSubmitting(true);
-    const timeSpent = startTime ? Date.now() - startTime : undefined;
+    const timeSpent = roundStartTime ? Date.now() - roundStartTime : undefined;
     const roundTime = 30 - timeLeft;
 
     try {
@@ -83,7 +71,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         action: selectedAction || '',
         object: selectedObject || '',
         timeSpent: roundTime,
-        isCorrect: !timeUp && selectedHero && selectedAction && selectedObject,
+        isCorrect: !timeUp && Boolean(selectedHero && selectedAction && selectedObject),
       };
       
       setCompletedRounds(prev => [...prev, roundResult]);
@@ -112,13 +100,33 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
       setSelectedAction('');
       setSelectedObject('');
       setTimeLeft(30);
-      setStartTime(Date.now());
+      setRoundStartTime(Date.now());
     } catch (error) {
       console.error('Failed to submit answer:', error);
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [selectedHero, selectedAction, selectedObject, isSubmitting, currentNumber, currentRound, rounds, roundStartTime, timeLeft, submitAnswer, game.id, onComplete]);
+
+  // Initialize round start time
+  useEffect(() => {
+    if (!roundStartTime) {
+      setRoundStartTime(Date.now());
+    }
+  }, [roundStartTime]);
+
+  // Timer for each round
+  useEffect(() => {
+    if (timeLeft > 0 && !isSubmitting) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      // Time's up - submit empty answer
+      handleSubmit(true);
+    }
+  }, [timeLeft, isSubmitting, handleSubmit]);
 
   const isComplete = selectedHero && selectedAction && selectedObject;
 
@@ -127,28 +135,28 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
       <div className="card">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">
-            🏆 Дуэль завершена!
+            🏆 Pojedynek zakończony!
           </h2>
           <div className="text-6xl font-bold text-blue-600 mb-4">
             {score}
           </div>
-          <p className="text-xl text-gray-600">Очков набрано</p>
+          <p className="text-xl text-gray-600">Zdobytych punktów</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="text-center p-6 bg-blue-50 rounded-lg">
             <div className="text-3xl font-bold text-blue-600">{score}</div>
-            <div className="text-gray-600">Общий счет</div>
+            <div className="text-gray-600">Łączny wynik</div>
           </div>
           <div className="text-center p-6 bg-green-50 rounded-lg">
             <div className="text-3xl font-bold text-green-600">{maxStreak}</div>
-            <div className="text-gray-600">Максимальная серия</div>
+            <div className="text-gray-600">Maksymalna seria</div>
           </div>
           <div className="text-center p-6 bg-purple-50 rounded-lg">
             <div className="text-3xl font-bold text-purple-600">
               {completedRounds.filter(r => r.isCorrect).length}/{rounds}
             </div>
-            <div className="text-gray-600">Правильных ответов</div>
+            <div className="text-gray-600">Poprawnych odpowiedzi</div>
           </div>
         </div>
 
@@ -157,7 +165,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
             onClick={onComplete}
             className="btn btn-primary text-lg px-8 py-3"
           >
-            Посмотреть результаты
+            Zobacz wyniki
           </button>
         </div>
       </div>
@@ -176,17 +184,17 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         <div className="flex items-center justify-center space-x-6 text-lg text-gray-600">
           <div className="flex items-center space-x-2">
             <Target className="h-5 w-5" />
-            <span>Раунд {currentRound}/{rounds}</span>
+            <span>Runda {currentRound}/{rounds}</span>
           </div>
           <div className="flex items-center space-x-2">
             <Clock className="h-5 w-5" />
             <span className={timeLeft <= 5 ? 'text-red-600 font-bold' : ''}>
-              {timeLeft}с
+              {timeLeft}s
             </span>
           </div>
           <div className="flex items-center space-x-2">
             <Zap className="h-5 w-5" />
-            <span>Серия: {streak}</span>
+            <span>Seria: {streak}</span>
           </div>
         </div>
       </div>
@@ -195,7 +203,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
       <div className="flex justify-center mb-6">
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg">
           <div className="text-2xl font-bold">{score}</div>
-          <div className="text-sm">Очков</div>
+          <div className="text-sm">Punktów</div>
         </div>
       </div>
 
@@ -203,7 +211,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         {/* Hero Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Герой
+            Bohater
           </h3>
           <div className="space-y-2">
             {categories.hero.map((hero, index) => (
@@ -230,7 +238,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         {/* Action Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Действие
+            Działanie
           </h3>
           <div className="space-y-2">
             {categories.action.map((action, index) => (
@@ -257,7 +265,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         {/* Object Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Объект
+            Przedmiot
           </h3>
           <div className="space-y-2">
             {categories.object.map((object, index) => (
@@ -286,7 +294,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
       {isComplete && (
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-            Ваша комбинация:
+            Twoja kombinacja:
           </h3>
           <div className="text-center text-xl">
             <span className="font-bold text-red-600">{selectedHero}</span>
@@ -308,10 +316,10 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
           {isSubmitting ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Отправка...</span>
+              <span>Wysyłanie...</span>
             </div>
           ) : (
-            'Отправить ответ'
+            'Wyślij odpowiedź'
           )}
         </button>
       </div>
@@ -319,7 +327,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
       {/* Progress Bar */}
       <div className="mt-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Прогресс</span>
+          <span>Postęp</span>
           <span>{currentRound}/{rounds}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -335,7 +343,7 @@ const AssociationDuelGame: React.FC<AssociationDuelGameProps> = ({
         <div className="mt-4 text-center">
           <div className="inline-flex items-center space-x-2 text-red-600 bg-red-50 px-4 py-2 rounded-lg animate-pulse">
             <Clock className="h-4 w-4" />
-            <span className="font-medium">Время заканчивается!</span>
+            <span className="font-medium">Czas się kończy!</span>
           </div>
         </div>
       )}

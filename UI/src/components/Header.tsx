@@ -18,12 +18,12 @@ const Header: React.FC = () => {
               className="flex items-center space-x-1 text-white/80 hover:text-white transition-colors"
             >
               <Home className="h-4 w-4" />
-              <span>Главная</span>
+              <span>Główna</span>
             </Link>
             
             <div className="flex items-center space-x-1 text-white/80">
               <Trophy className="h-4 w-4" />
-              <span>Очки: 0</span>
+              <span>Punkty: 0</span>
             </div>
           </nav>
         </div>

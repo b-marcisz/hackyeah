@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { GameResponse, GameType, StartGameRequest } from '../types';
+import { GameResponse, StartGameRequest } from '../types';
 import { gameApi } from '../services/api';
 
 interface GameState {

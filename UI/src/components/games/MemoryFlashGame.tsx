@@ -28,7 +28,7 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
   } | null>(null);
 
   const association = gameState.association;
-  const memorizationTime = gameState.memorizationTime || 5;
+  // const memorizationTime = gameState.memorizationTime || 5;
 
   // Timer for memorization phase
   useEffect(() => {
@@ -50,7 +50,7 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
 
   const handleSubmit = async () => {
     if (!selectedElement) {
-      alert('Пожалуйста, выберите элемент, который изменился');
+      alert('Proszę wybrać element, który się zmienił');
       return;
     }
 
@@ -79,9 +79,9 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
     const changedElement = elements[Math.floor(Math.random() * elements.length)];
     
     return {
-      hero: changedElement === 'hero' ? 'Новый герой' : memorizedScene.hero,
-      action: changedElement === 'action' ? 'новое действие' : memorizedScene.action,
-      object: changedElement === 'object' ? 'новый объект' : memorizedScene.object,
+      hero: changedElement === 'hero' ? 'Nowy bohater' : memorizedScene.hero,
+      action: changedElement === 'action' ? 'nowe działanie' : memorizedScene.action,
+      object: changedElement === 'object' ? 'nowy przedmiot' : memorizedScene.object,
       changedElement,
     };
   };
@@ -93,20 +93,20 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
       <div className="card">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Запомни сцену
+            Zapamiętaj scenę
           </h2>
           <div className="text-6xl font-bold text-blue-600 mb-4">
             {game.number}
           </div>
           <div className="flex items-center justify-center space-x-2 text-lg text-gray-600">
             <Clock className="h-5 w-5" />
-            <span>Время: {timeLeft} сек</span>
+            <span>Czas: {timeLeft} s</span>
           </div>
         </div>
 
         <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-8 mb-6">
           <div className="text-center text-2xl font-bold text-gray-800 mb-4">
-            Сцена для запоминания:
+            Scena do zapamiętania:
           </div>
           <div className="text-center text-3xl">
             <span className="font-bold text-red-600">{association.hero}</span>
@@ -120,7 +120,7 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
         <div className="text-center">
           <div className="inline-flex items-center space-x-2 text-lg text-gray-600">
             <Eye className="h-5 w-5" />
-            <span>Внимательно смотри и запоминай!</span>
+            <span>Patrz uważnie i zapamiętuj!</span>
           </div>
         </div>
       </div>
@@ -131,20 +131,20 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
     <div className="card">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Найди отличия
+          Znajdź różnice
         </h2>
         <div className="text-6xl font-bold text-blue-600 mb-4">
           {game.number}
         </div>
         <p className="text-lg text-gray-600">
-          Какой элемент изменился по сравнению с запомненной сценой?
+          Który element zmienił się w porównaniu z zapamiętaną sceną?
         </p>
       </div>
 
       {changedScene && (
         <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-8 mb-6">
           <div className="text-center text-2xl font-bold text-gray-800 mb-4">
-            Измененная сцена:
+            Zmieniona scena:
           </div>
           <div className="text-center text-3xl">
             <span className="font-bold text-red-600">{changedScene.hero}</span>
@@ -158,7 +158,7 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
 
       <div className="space-y-4 mb-8">
         <h3 className="text-lg font-semibold text-gray-700 text-center">
-          Что изменилось?
+          Co się zmieniło?
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {['hero', 'action', 'object'].map((element) => (
@@ -172,8 +172,8 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
               }`}
             >
               <div className="text-lg font-medium capitalize">
-                {element === 'hero' ? 'Герой' : 
-                 element === 'action' ? 'Действие' : 'Объект'}
+                {element === 'hero' ? 'Bohater' : 
+                 element === 'action' ? 'Działanie' : 'Przedmiot'}
               </div>
             </button>
           ))}
@@ -189,10 +189,10 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
           {isSubmitting ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Отправка...</span>
+              <span>Wysyłanie...</span>
             </div>
           ) : (
-            'Проверить ответ'
+            'Sprawdź odpowiedź'
           )}
         </button>
       </div>
@@ -200,7 +200,7 @@ const MemoryFlashGame: React.FC<MemoryFlashGameProps> = ({
       <div className="mt-6 text-center text-sm text-gray-500">
         <div className="flex items-center justify-center space-x-2">
           <EyeOff className="h-4 w-4" />
-          <span>Выберите элемент, который изменился</span>
+          <span>Wybierz element, który się zmienił</span>
         </div>
       </div>
     </div>

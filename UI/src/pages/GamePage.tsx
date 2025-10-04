@@ -35,7 +35,7 @@ const GamePage: React.FC = () => {
   };
 
   if (state.isLoading && !state.currentGame) {
-    return <LoadingSpinner message="Загрузка игры..." />;
+    return <LoadingSpinner message="Ładowanie gry..." />;
   }
 
   if (state.error) {
@@ -51,22 +51,24 @@ const GamePage: React.FC = () => {
   if (!state.currentGame) {
     return (
       <ErrorMessage 
-        message="Игра не найдена" 
+        message="Gra nie została znaleziona" 
         onRetry={() => navigate('/')}
         onClose={() => navigate('/')}
       />
     );
   }
 
-  const gameState = state.currentGame.state as GameState;
+  const gameState = state.currentGame?.state as unknown as GameState;
   const gameProps = {
-    game: state.currentGame,
+    game: state.currentGame!,
     gameState,
     onComplete: handleGameComplete,
     startTime,
   };
 
   const renderGame = () => {
+    if (!state.currentGame) return null;
+    
     switch (state.currentGame.type) {
       case GameType.MATCH_HAO:
         return <MatchHaoGame {...gameProps} />;
@@ -82,16 +84,16 @@ const GamePage: React.FC = () => {
         return (
           <div className="card text-center">
             <h2 className="text-2xl font-bold text-red-600 mb-4">
-              Неизвестный тип игры
+              Nieznany typ gry
             </h2>
             <p className="text-gray-600 mb-6">
-              Тип игры "{state.currentGame.type}" не поддерживается
+              Typ gry "{state.currentGame.type}" nie jest obsługiwany
             </p>
             <button 
               onClick={() => navigate('/')}
               className="btn btn-primary"
             >
-              Вернуться на главную
+              Wróć do głównej
             </button>
           </div>
         );
@@ -105,37 +107,37 @@ const GamePage: React.FC = () => {
           onClick={() => navigate('/')}
           className="btn btn-secondary mb-4"
         >
-          ← Назад к играм
+          ← Wróć do gier
         </button>
         
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold text-white">
-            {getGameTypeName(state.currentGame.type)}
+            {getGameTypeName(state.currentGame?.type || GameType.MATCH_HAO)}
           </h1>
           <div className="text-white/80">
-            Число: <span className="font-bold text-2xl">{state.currentGame.number}</span>
+            Liczba: <span className="font-bold text-2xl">{state.currentGame?.number}</span>
           </div>
         </div>
         
         <div className="flex items-center space-x-6 text-white/80">
           <div className="flex items-center space-x-2">
-            <span>Сложность:</span>
+            <span>Trudność:</span>
             <div className="flex space-x-1">
               {Array.from({ length: 5 }, (_, i) => (
                 <div 
                   key={i} 
                   className={`w-3 h-3 rounded-full ${
-                    i < state.currentGame.difficulty ? 'bg-yellow-400' : 'bg-gray-400'
+                    i < (state.currentGame?.difficulty || 0) ? 'bg-yellow-400' : 'bg-gray-400'
                   }`}
                 />
               ))}
             </div>
           </div>
           <div>
-            Очки: <span className="font-bold">{state.currentGame.points}</span>
+            Punkty: <span className="font-bold">{state.currentGame?.points}</span>
           </div>
           <div>
-            XP: <span className="font-bold">{state.currentGame.xp}</span>
+            XP: <span className="font-bold">{state.currentGame?.xp}</span>
           </div>
         </div>
       </div>
@@ -147,11 +149,11 @@ const GamePage: React.FC = () => {
 
 const getGameTypeName = (type: GameType): string => {
   const names = {
-    [GameType.MATCH_HAO]: 'Match HAO',
-    [GameType.MEMORY_FLASH]: 'Memory Flash',
-    [GameType.SPEED_RECALL]: 'Speed Recall',
-    [GameType.NUMBER_STORY]: 'Number Story',
-    [GameType.ASSOCIATION_DUEL]: 'Association Duel',
+    [GameType.MATCH_HAO]: 'Dopasuj HAO',
+    [GameType.MEMORY_FLASH]: 'Błysk Pamięci',
+    [GameType.SPEED_RECALL]: 'Szybkie Przypomnienie',
+    [GameType.NUMBER_STORY]: 'Historia Liczby',
+    [GameType.ASSOCIATION_DUEL]: 'Pojedynek Skojarzeń',
   };
   return names[type] || type;
 };
