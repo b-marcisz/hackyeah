@@ -22,13 +22,22 @@ export default function App() {
     // TODO: Add other games
   };
 
+  const handleBackToProfiles = () => {
+    setSelectedProfile(null);
+    setCurrentScreen('profile-selection');
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'profile-selection':
         return <ProfileSelection onSelectProfile={handleSelectProfile} />;
       case 'game-dashboard':
         return selectedProfile ? (
-          <GameDashboard profile={selectedProfile} onSelectGame={handleSelectGame} />
+          <GameDashboard
+            profile={selectedProfile}
+            onSelectGame={handleSelectGame}
+            onBackToProfiles={handleBackToProfiles}
+          />
         ) : (
           <ProfileSelection onSelectProfile={handleSelectProfile} />
         );
