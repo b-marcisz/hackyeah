@@ -18,7 +18,9 @@
       "Bash(findstr:*)",
       "Bash(curl:*)",
       "WebFetch(domain:localhost)",
-      "Bash(ipconfig)"
+      "Bash(ipconfig)",
+      "Bash(python:*)",
+      "Bash(npx expo install:*)"
     ],
     "deny": [],
     "ask": []

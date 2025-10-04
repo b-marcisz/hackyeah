@@ -12,6 +12,9 @@ export interface Profile {
   role?: 'admin' | 'user'; // From backend
   age?: number; // From backend
   accountId?: string; // From backend
+  settings?: {
+    timeLimit: number;
+  };
 }
 
 interface ProfileSelectionProps {
