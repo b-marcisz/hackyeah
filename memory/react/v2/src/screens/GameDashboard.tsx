@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Platform, Image } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Profile } from './ProfileSelection';
@@ -12,7 +12,7 @@ interface GameDashboardProps {
 interface Game {
   id: string;
   name: string;
-  icon: string;
+  iconImage?: any;
   color: string;
 }
 
@@ -22,10 +22,8 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   const games: Game[] = [
-    { id: 'memory', name: 'Memory', icon: '🎴', color: '#FF6B9D' },
-    { id: 'puzzle', name: 'Puzzle', icon: '🧩', color: '#4FACFE' },
-    { id: 'math', name: 'Matematyka', icon: '➕', color: '#43E97B' },
-    { id: 'colors', name: 'Kolory', icon: '🎨', color: '#F093FB' },
+    { id: 'memory', name: 'Memory', iconImage: require('../../assets/memory/memory.png'), color: '#FF6B9D' },
+    { id: 'memory-less', name: 'Memory Less', iconImage: require('../../assets/memory/memory-loss.png'), color: '#4FACFE' },
   ];
 
   const handleSelectGame = (gameId: string) => {
@@ -111,14 +109,11 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
         </Text>
       </View>
 
-      <ScrollView
-        horizontal={isLandscape}
-        contentContainerStyle={[
+      <View
+        style={[
           styles.gamesContainer,
           isLandscape && styles.gamesContainerLandscape
         ]}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
       >
         {games.map((game, index) => (
           <TouchableOpacity
@@ -131,8 +126,13 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
             onPress={() => handleSelectGame(game.id)}
             activeOpacity={0.8}
           >
-            <Text style={styles.gameIcon}>{game.icon}</Text>
-            <Text style={styles.gameName}>{game.name}</Text>
+            {game.iconImage && (
+              <Image
+                source={game.iconImage}
+                style={[styles.gameIcon, isLandscape && styles.gameIconLandscape]}
+                resizeMode="contain"
+              />
+            )}
           </TouchableOpacity>
         ))}
 
@@ -146,10 +146,9 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
           onPress={onBackToProfiles}
           activeOpacity={0.8}
         >
-          <FontAwesome name="arrow-left" size={60} color="#fff" style={{ marginBottom: 15 }} />
-          <Text style={styles.gameName}>Zmień profil</Text>
+          <FontAwesome name="arrow-left" size={isLandscape ? 50 : 60} color="#fff" />
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -187,6 +186,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'center',
     gap: 20,
     paddingBottom: 40,
   },
@@ -194,7 +194,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
     paddingBottom: 25,
-    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   gameCard: {
     width: 180,
@@ -215,8 +216,12 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   gameIcon: {
-    fontSize: 80,
-    marginBottom: 15,
+    width: 120,
+    height: 120,
+  },
+  gameIconLandscape: {
+    width: 100,
+    height: 100,
   },
   gameName: {
     fontSize: 24,

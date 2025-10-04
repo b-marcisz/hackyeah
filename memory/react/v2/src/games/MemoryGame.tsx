@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, Dimensions, useWindowDimensions, Platform } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Tile {
   iconIndex: number;
@@ -22,7 +23,7 @@ export default function MemoryGame() {
 
   // Calculate optimal tile size based on available space
   const availableWidth = width - 40; // padding
-  const availableHeight = height - 180; // title, info panel
+  const availableHeight = height - 120; // top bar + padding
 
   let TILE_SIZE: number;
   let TILE_SPACING: number;
@@ -197,19 +198,23 @@ export default function MemoryGame() {
   const matchedCount = tiles.filter((t) => t.matched).length;
 
   const getTilePosition = (iconIndex: number) => {
-    // Sprite sheet ma 4 kolumny i 2 rzędy
-    const col = iconIndex % 4;
-    const row = Math.floor(iconIndex / 4);
+    // Sprite sheet ma 4 kolumny i 2 rzędy (oryginalnie 320x160, czyli 80px per tile)
+    const SPRITE_COLS = 4;
+    const SPRITE_ROWS = 2;
+    const ORIGINAL_TILE_SIZE = 80;
 
-    // Zakładamy, że sprite sheet ma wymiary 320x160 (4x2 tiles po 80px każdy)
-    const spriteWidth = 320;
-    const spriteHeight = 160;
+    const col = iconIndex % SPRITE_COLS;
+    const row = Math.floor(iconIndex / SPRITE_COLS);
+
+    // Skalujemy pozycję proporcjonalnie do aktualnego rozmiaru kafelka
+    const scale = TILE_SIZE / ORIGINAL_TILE_SIZE;
 
     return {
       col,
       row,
       left: col * TILE_SIZE,
       top: row * TILE_SIZE,
+      scale,
     };
   };
 
@@ -223,59 +228,64 @@ export default function MemoryGame() {
         <View style={styles.overlay} />
       </ImageBackground>
       <View style={styles.container}>
-        <StatusBar style="light" />
+        <StatusBar style="light" hidden={true} />
 
-      <View style={[styles.board, { width: (TILE_SIZE + TILE_SPACING) * COLUMNS }]}>
-        {tiles.map((tile, idx) => {
-          const position = getTilePosition(tile.iconIndex);
-          return (
-            <TouchableOpacity
-              key={idx}
-              style={[
-                styles.tile,
-                {
-                  width: TILE_SIZE,
-                  height: TILE_SIZE,
-                  margin: TILE_SPACING / 2,
-                },
-                selectedIndex === idx && styles.tileSelected
-              ]}
-              onPress={() => flipTile(idx)}
-              activeOpacity={0.8}
-            >
-              {tile.flipped || tile.matched ? (
-                <View style={[styles.tileImageContainer, { width: TILE_SIZE, height: TILE_SIZE }]}>
-                  <Image
-                    source={require('../../assets/memo-tiles.png')}
-                    style={{
-                      width: TILE_SIZE * 4,
-                      height: TILE_SIZE * 2,
-                      position: 'absolute',
-                      left: -position.left,
-                      top: -position.top,
-                    }}
-                    resizeMode="stretch"
-                  />
-                </View>
-              ) : (
-                <View style={styles.tileBack}>
-                  <Text style={[styles.tileBackText, { fontSize: TILE_SIZE * 0.5 }]}>?</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+        {/* Top info bar */}
+        <View style={[styles.topBar, isLandscape && styles.topBarLandscape]}>
+          <Text style={[styles.movesText, isLandscape && styles.movesTextLandscape]}>
+            Ruchy: {moves}
+          </Text>
+          <TouchableOpacity style={[styles.button, isLandscape && styles.buttonLandscape]} onPress={resetGame}>
+            <FontAwesome name="refresh" size={isLandscape ? 20 : 28} color="#fff" />
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.info}>
-        <TouchableOpacity style={styles.button} onPress={resetGame}>
-          <Text style={[styles.buttonText, { fontSize: isLandscape ? 14 : 18 }]}>Restart</Text>
-        </TouchableOpacity>
-        <Text style={[styles.movesText, { fontSize: isLandscape ? 16 : 20 }]}>Moves: {moves}</Text>
+        {/* Win message */}
         {matchedCount === tiles.length && tiles.length > 0 && (
-          <Text style={[styles.winText, { fontSize: isLandscape ? 18 : 24 }]}>🎉 You won! 🎉</Text>
+          <View style={styles.winBanner}>
+            <Text style={[styles.winText, { fontSize: isLandscape ? 20 : 28 }]}>🎉 Wygrałeś! 🎉</Text>
+          </View>
         )}
-      </View>
+
+        <View style={[styles.board, { width: (TILE_SIZE + TILE_SPACING) * COLUMNS }]}>
+          {tiles.map((tile, idx) => {
+            const position = getTilePosition(tile.iconIndex);
+            return (
+              <TouchableOpacity
+                key={idx}
+                style={[
+                  styles.tile,
+                  {
+                    width: TILE_SIZE,
+                    height: TILE_SIZE,
+                    margin: TILE_SPACING / 2,
+                  },
+                ]}
+                onPress={() => flipTile(idx)}
+                activeOpacity={0.8}
+              >
+                {tile.flipped || tile.matched ? (
+                  <View style={[styles.tileImageContainer, { width: TILE_SIZE, height: TILE_SIZE }]}>
+                    <Image
+                      source={require('../../assets/memo-tiles.png')}
+                      style={{
+                        width: TILE_SIZE * 4,
+                        height: TILE_SIZE * 2,
+                        position: 'absolute',
+                        left: -position.left,
+                        top: -position.top,
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.tileBack}>
+                    <Text style={[styles.tileBackText, { fontSize: TILE_SIZE * 0.5 }]}>?</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
     </View>
   );
@@ -300,20 +310,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+  topBar: {
+    position: 'absolute',
+    top: 15,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 10,
+  },
+  topBarLandscape: {
+    top: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   board: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginBottom: 20,
   },
   tile: {
     borderRadius: 12,
@@ -326,14 +350,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-  },
-  tileSelected: {
-    borderColor: '#FFD700',
-    borderWidth: 4,
-    shadowColor: '#FFD700',
-    shadowOpacity: 0.8,
-    shadowRadius: 8,
-    elevation: 10,
   },
   tileImageContainer: {
     overflow: 'hidden',
@@ -350,36 +366,55 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  info: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: 15,
-    borderRadius: 15,
-  },
   button: {
     backgroundColor: '#ff6b35',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderRadius: 25,
-    marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonLandscape: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
   },
   movesText: {
-    marginBottom: 8,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: '#333',
+  },
+  movesTextLandscape: {
+    fontSize: 14,
+  },
+  winBanner: {
+    position: 'absolute',
+    top: 80,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(255, 107, 53, 0.95)',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    zIndex: 10,
   },
   winText: {
     fontWeight: 'bold',
-    marginTop: 8,
-    color: '#ff6b35',
+    color: '#fff',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });
