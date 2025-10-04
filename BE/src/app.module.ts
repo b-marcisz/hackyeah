@@ -7,12 +7,16 @@ import { NumberAssociation } from './entities/number-association.entity';
 import { GamesModule } from './games/games.module';
 import { Game } from './games/game.entity';
 import { Card } from './cards/card.entity';
+import { AccountsModule } from './accounts/accounts.module';
+import { Account } from './accounts/entities/account.entity';
+import { User } from './accounts/entities/user.entity';
 
 @Module({
   imports: [
     CardsModule,
     OpenApiModule,
     GamesModule,
+    AccountsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,9 +29,9 @@ import { Card } from './cards/card.entity';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
-          entities: [NumberAssociation, Card, Game],
+          entities: [NumberAssociation, Card, Game, User, Account],
           autoLoadEntities: false,
-          synchronize: false,
+          synchronize: true
         } as any;
       
         console.log('📡 DB CONFIG:', config); // ← добавь это
