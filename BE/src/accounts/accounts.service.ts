@@ -73,6 +73,9 @@ export class AccountsService {
       relations: ['users'],
     });
     if (!account) return null;
+    if (updateUserDto.code != account.code) {
+      throw new ForbiddenException();
+    }
     const user = account.users.find(u => u.id === userId);
     if (!user) return null;
 
