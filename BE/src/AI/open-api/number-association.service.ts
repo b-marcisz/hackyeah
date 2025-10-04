@@ -52,7 +52,7 @@ export class NumberAssociationService {
   }
 
   private async callOpenAI(prompt: string): Promise<AssociationResponse> {
-    const response = await this.openApiService.post<any>('/chat/completions', {
+    const response = await this.openApiService.post<any>('/v1/chat/completions', {
       model: 'gpt-4',
       messages: [
         {
@@ -128,13 +128,14 @@ export class NumberAssociationService {
   }
 
   async generateAllAssociations(): Promise<number> {
-    this.logger.log('Starting generation of associations for numbers 0-99');
+    this.logger.log('Starting generation of next 10 associations');
     
     // Сначала получаем все существующие числа в базе данных
     const existingNumbers = await this.numberAssociationRepository
       .createQueryBuilder('association')
       .select('DISTINCT association.number')
       .where('association.is_primary = :isPrimary', { isPrimary: true })
+      .orderBy('association.number', 'ASC')
       .getRawMany();
 
     const existingNumberSet = new Set(existingNumbers.map(item => item.number));
@@ -143,16 +144,20 @@ export class NumberAssociationService {
     let successCount = 0;
     let skippedCount = 0;
     const errors: string[] = [];
+    const maxToGenerate = 10; // Generate only next 10 numbers
 
-    for (let number = 0; number <= 99; number++) {
+    // Find the next 10 numbers that don't have associations
+    const numbersToGenerate: number[] = [];
+    for (let number = 0; number <= 99 && numbersToGenerate.length < maxToGenerate; number++) {
+      if (!existingNumberSet.has(number)) {
+        numbersToGenerate.push(number);
+      }
+    }
+
+    this.logger.log(`Will generate associations for numbers: ${numbersToGenerate.join(', ')}`);
+
+    for (const number of numbersToGenerate) {
       try {
-        // Генерируем только если числа нет в базе данных
-        if (existingNumberSet.has(number)) {
-          this.logger.debug(`Number ${number} already exists in database, skipping`);
-          skippedCount++;
-          continue;
-        }
-
         await this.generateAssociation(number);
         successCount++;
         this.logger.debug(`Generated association for number ${number}`);
@@ -166,7 +171,7 @@ export class NumberAssociationService {
       }
     }
 
-    this.logger.log(`Generated ${successCount} new associations, skipped ${skippedCount} existing ones. Errors: ${errors.length}`);
+    this.logger.log(`Generated ${successCount} new associations. Errors: ${errors.length}`);
     
     if (errors.length > 0) {
       this.logger.warn('Some associations failed to generate:', errors);
@@ -175,10 +180,11 @@ export class NumberAssociationService {
     return successCount;
   }
 
-  async getAllPrimaryAssociations(): Promise<NumberAssociation[]> {
+  async getAllPrimaryAssociations(): Promise<Partial<NumberAssociation>[]> {
     return this.numberAssociationRepository.find({
       where: { is_primary: true },
       order: { number: 'ASC' },
+      select: ['number', 'hero', 'action', 'object'],
     });
   }
 
