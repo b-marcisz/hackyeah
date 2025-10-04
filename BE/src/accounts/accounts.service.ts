@@ -46,4 +46,20 @@ export class AccountsService {
     const acc = this.accountRepository.create({ name: dto.name, code: dto.code, users: [] });
     return this.accountRepository.save(acc);
   }
+
+  async deleteUser(accountName: string, userId: string): Promise<boolean> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) {
+      return false;
+    }
+    const user = account.users.find(u => u.id === userId);
+    if (!user) {
+      return false;
+    }
+    await this.userRepository.delete(userId);
+    return true;
+  }
 }
