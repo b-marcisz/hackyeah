@@ -102,12 +102,14 @@ export class AccountsController {
     return updated;
   }
 
-  @Get('check-code/:code')
+  @Get(':accountName/check-code/:code')
   @ApiOperation({ summary: 'Check if code exists for any account' })
+  @ApiParam({ name: 'accountName', type: String, description: 'Account name' })
   @ApiParam({ name: 'code', type: String, description: '4-digit code' })
   @ApiResponse({ status: 200, description: 'Code existence', schema: { example: { exists: true } } })
-  async checkCode(@Param('code') code: string) {
-    const exists = await this.accountsService.codeExists(code);
+  async checkCode(
+    @Param('accountName') accountName: string, @Param('code') code: string) {
+    const exists = await this.accountsService.codeExists(accountName, code);
     return { exists };
   }
   

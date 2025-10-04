@@ -84,8 +84,8 @@ export class AccountsService {
     return user;
   }
 
-  async codeExists(code: string): Promise<boolean> {
-    const account = await this.accountRepository.findOne({ where: { code } });
+  async codeExists(accountName: string, code: string): Promise<boolean> {
+    const account = await this.accountRepository.findOne({ where: { code, name: accountName } });
     return !!account;
   }
 }
