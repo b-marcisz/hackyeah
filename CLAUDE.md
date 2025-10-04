@@ -68,3 +68,27 @@ The application is a single-component React Native app located at `memory/react/
 - **Styling**: React Native StyleSheet with similar visual design to Vue version
 
 When modifying the game, note that tile state uses three properties: `letter`, `flipped`, and `matched`.
+
+## Development Plan
+
+### Overview
+Aplikacja edukacyjna skierowana dla dzieci - dashboard z różnymi grami logicznymi. Nacisk na interfejs mobilny (tablety).
+
+### Phase 1: Profile Selection (Netflix-style)
+- [ ] UI wyboru profili - widok kafelkowy, przyjazny dla dzieci
+- [ ] Typy profili:
+  - Rodzic (z możliwością zarządzania profilami dzieci)
+  - Dziecko
+- [ ] Możliwość dodawania nowych profili
+- [ ] Prosta nawigacja dostosowana do tabletów
+
+### Phase 2: Dashboard (To be planned)
+- [ ] Widok kafelkowy z grami logicznymi
+- [ ] Łatwa nawigacja dla dzieci
+
+### Phase 3: Parent Panel (To be planned)
+- [ ] Zarządzanie profilami dzieci
+
+### Tech Stack
+- React Native (Expo)
+- Mobile-first (tablety jako główne urządzenie docelowe)
