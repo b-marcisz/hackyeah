@@ -5,8 +5,9 @@ import GameDashboard from './src/screens/GameDashboard';
 import MemoryGame from './src/games/MemoryGame';
 import PinEntry from './src/screens/PinEntry';
 import AdminPanel from './src/screens/AdminPanel';
+import TimeLimitReached from './src/screens/TimeLimitReached';
 
-type Screen = 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel';
+type Screen = 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('profile-selection');
@@ -58,6 +59,10 @@ export default function App() {
     setCurrentScreen('profile-selection');
   };
 
+  const handleTimeLimitReached = () => {
+    setCurrentScreen('time-limit-reached');
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'profile-selection':
@@ -97,6 +102,19 @@ export default function App() {
             profiles={profiles}
             onBack={handleBackFromAdmin}
             initialTab={adminTab}
+          />
+        );
+      case 'time-limit-reached':
+        return selectedProfile ? (
+          <TimeLimitReached
+            profile={selectedProfile}
+            onBackToProfiles={handleBackToProfiles}
+          />
+        ) : (
+          <ProfileSelection
+            onSelectProfile={handleSelectProfile}
+            onOpenSettings={handleOpenSettings}
+            onAddProfile={handleAddProfile}
           />
         );
       default:
