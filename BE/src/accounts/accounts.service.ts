@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserSession } from './entities/session.entity';
 
 @Injectable()
 export class AccountsService {
@@ -14,6 +15,8 @@ export class AccountsService {
     private readonly accountRepository: Repository<Account>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserSession)
+    private readonly userSessionRepository: Repository<UserSession>
   ) {}
 
   async findByName(accountName: string): Promise<Account> {
@@ -87,5 +90,41 @@ export class AccountsService {
   async codeExists(accountName: string, code: string): Promise<boolean> {
     const account = await this.accountRepository.findOne({ where: { code, name: accountName } });
     return !!account;
+  }
+
+  async saveUserSession(accountName: string, userId: string): Promise<{created: boolean}> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) throw new NotFoundException('Account not found');
+    const user = account.users.find(u => u.id === userId);
+    if (!user) throw new NotFoundException('User not found');
+
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const existing = await this.userSessionRepository.findOne({
+      where: { user: { id: userId }, date: today },
+    });
+
+    if (existing) return { created: false };
+
+    const session = this.userSessionRepository.create({ user, date: today });
+    await this.userSessionRepository.save(session);
+    return { created: true };
+  }
+
+  async getUserSessionToday(accountName: string, userId: string): Promise<UserSession | null> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) throw new NotFoundException('Account not found');
+    const user = account.users.find(u => u.id === userId);
+    if (!user) throw new NotFoundException('User not found');
+  
+    const today = new Date().toISOString().split('T')[0];
+    return await this.userSessionRepository.findOne({
+      where: { user: { id: userId }, date: today },
+    });
   }
 }
