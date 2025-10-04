@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-expo-app:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm create:*)",
+      "Bash(npx create-vite@latest:*)",
+      "Bash(mv:*)",
+      "Bash(npm install)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
