@@ -12,7 +12,7 @@ export default function PinEntry({ onPinCorrect, onBack }: PinEntryProps) {
   const isLandscape = width > height;
   const [pin, setPin] = useState('');
   const [error, setError] = useState(false);
-  const CORRECT_PIN = '1111';
+  const CORRECT_PIN = '1234'; // PIN for account "Jan"
 
   const handleNumberPress = (num: string) => {
     if (pin.length < 4) {

@@ -143,7 +143,7 @@ export default function MemoryGame() {
     } else if (button === 'start') {
       resetGame();
     }
-  }, [selectedIndex, flipTile, COLUMNS]);
+  }, [selectedIndex, flipTile, resetGame, COLUMNS]);
 
   // Use gamepad hook only on web platform
   useEffect(() => {

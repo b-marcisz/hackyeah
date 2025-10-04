@@ -11,7 +11,14 @@
       "Bash(npx tsc:*)",
       "WebSearch",
       "Bash(npm uninstall:*)",
-      "Bash(npx tailwindcss:*)"
+      "Bash(npx tailwindcss:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(ipconfig)"
     ],
     "deny": [],
     "ask": []

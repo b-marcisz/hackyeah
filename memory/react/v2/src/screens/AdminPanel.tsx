@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Switch, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Switch, TextInput, Alert } from 'react-native';
 import { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Profile } from './ProfileSelection';
+import { accountsService, UserRole, ProfileColor } from '../api';
 
 interface AdminPanelProps {
   profiles: Profile[];
   onBack: () => void;
   initialTab?: 'settings' | 'add-profile';
+  onProfileAdded?: () => void; // Callback to refresh profiles
 }
 
 interface TimeLimit {
@@ -15,7 +17,7 @@ interface TimeLimit {
   maxMinutesPerDay: number;
 }
 
-export default function AdminPanel({ profiles, onBack, initialTab = 'settings' }: AdminPanelProps) {
+export default function AdminPanel({ profiles, onBack, initialTab = 'settings', onProfileAdded }: AdminPanelProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [activeTab, setActiveTab] = useState<'settings' | 'add-profile'>(initialTab);
@@ -32,6 +34,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings' }
   // New profile form state
   const [newProfileName, setNewProfileName] = useState('');
   const [selectedColor, setSelectedColor] = useState('#F093FB');
+  const [isAddingProfile, setIsAddingProfile] = useState(false);
 
   const toggleTimeLimit = (profileId: string) => {
     setTimeLimits(prev => prev.map(limit =>
@@ -52,12 +55,52 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings' }
   const timeLimitOptions = [15, 30, 45, 60, 90, 120];
   const profileColors = ['#F093FB', '#4FACFE', '#43E97B', '#FF6B9D', '#FFA502', '#A29BFE'];
 
-  const handleAddProfile = () => {
-    if (newProfileName.trim()) {
-      // TODO: Dodać do listy profili
-      console.log('Add profile:', newProfileName, selectedColor);
+  // Map hex colors to ProfileColor enum
+  const colorHexToEnum: Record<string, ProfileColor> = {
+    '#F093FB': ProfileColor.PINK_PURPLE,
+    '#4FACFE': ProfileColor.BLUE,
+    '#43E97B': ProfileColor.GREEN,
+    '#FF6B9D': ProfileColor.PINK,
+    '#FFA502': ProfileColor.ORANGE,
+    '#A29BFE': ProfileColor.LAVENDER,
+  };
+
+  const handleAddProfile = async () => {
+    if (!newProfileName.trim()) {
+      Alert.alert('Error', 'Please enter a name');
+      return;
+    }
+
+    setIsAddingProfile(true);
+    try {
+      // Add user to account "Jan"
+      await accountsService.addUser('Jan', {
+        name: newProfileName.trim(),
+        role: UserRole.USER,
+        color: colorHexToEnum[selectedColor],
+        settings: {
+          timeLimit: 30, // Default 30 minutes
+        },
+      });
+
+      Alert.alert('Success', `Profile "${newProfileName}" added successfully!`);
+
+      // Clear form
       setNewProfileName('');
+      setSelectedColor('#F093FB');
+
+      // Refresh profiles list
+      if (onProfileAdded) {
+        onProfileAdded();
+      }
+
+      // Switch to settings tab
       setActiveTab('settings');
+    } catch (error: any) {
+      console.error('Error adding profile:', error);
+      Alert.alert('Error', error.response?.data?.message || 'Failed to add profile. Please try again.');
+    } finally {
+      setIsAddingProfile(false);
     }
   };
 
@@ -258,11 +301,13 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings' }
                 !newProfileName.trim() && styles.addButtonDisabled
               ]}
               onPress={handleAddProfile}
-              disabled={!newProfileName.trim()}
+              disabled={!newProfileName.trim() || isAddingProfile}
               activeOpacity={0.7}
             >
               <FontAwesome name="plus-circle" size={24} color="#fff" />
-              <Text style={styles.addButtonText}>Dodaj profil</Text>
+              <Text style={styles.addButtonText}>
+                {isAddingProfile ? 'Dodawanie...' : 'Dodaj profil'}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
