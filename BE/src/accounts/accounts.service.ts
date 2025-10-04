@@ -5,6 +5,7 @@ import { Account } from './entities/account.entity';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AccountsService {
@@ -45,5 +46,35 @@ export class AccountsService {
     if (exists) throw new ConflictException('Account with this name or code already exists');
     const acc = this.accountRepository.create({ name: dto.name, code: dto.code, users: [] });
     return this.accountRepository.save(acc);
+  }
+
+  async deleteUser(accountName: string, userId: string): Promise<boolean> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) {
+      return false;
+    }
+    const user = account.users.find(u => u.id === userId);
+    if (!user) {
+      return false;
+    }
+    await this.userRepository.delete(userId);
+    return true;
+  }
+
+  async updateUser(accountName: string, userId: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+    const account = await this.accountRepository.findOne({
+      where: { name: accountName },
+      relations: ['users'],
+    });
+    if (!account) return null;
+    const user = account.users.find(u => u.id === userId);
+    if (!user) return null;
+
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+    return user;
   }
 }
