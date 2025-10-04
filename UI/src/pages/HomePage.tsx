@@ -17,43 +17,43 @@ import {
 const gameTypes: GameInfo[] = [
   {
     id: GameType.MATCH_HAO,
-    name: 'Match HAO',
-    description: 'Сопоставь героя, действие и объект для числа',
+    name: 'Dopasuj HAO',
+    description: 'Dopasuj bohatera, działanie i obiekt do liczby',
     icon: 'Target',
     difficulty: 2,
-    estimatedTime: '2-3 мин'
+    estimatedTime: '2-3 min'
   },
   {
     id: GameType.MEMORY_FLASH,
-    name: 'Memory Flash',
-    description: 'Запомни сцену и найди отличия',
+    name: 'Błysk Pamięci',
+    description: 'Zapamiętaj scenę i znajdź różnice',
     icon: 'Zap',
     difficulty: 3,
-    estimatedTime: '3-5 мин'
+    estimatedTime: '3-5 min'
   },
   {
     id: GameType.SPEED_RECALL,
-    name: 'Speed Recall',
-    description: 'Быстро вспомни ассоциацию для числа',
+    name: 'Szybkie Przypomnienie',
+    description: 'Szybko przypomnij sobie skojarzenie dla liczby',
     icon: 'Clock',
     difficulty: 4,
-    estimatedTime: '1-2 мин'
+    estimatedTime: '1-2 min'
   },
   {
     id: GameType.NUMBER_STORY,
-    name: 'Number Story',
-    description: 'Создай историю с элементами HAO',
+    name: 'Historia Liczby',
+    description: 'Stwórz historię z elementami HAO',
     icon: 'BookOpen',
     difficulty: 5,
-    estimatedTime: '5-10 мин'
+    estimatedTime: '5-10 min'
   },
   {
     id: GameType.ASSOCIATION_DUEL,
-    name: 'Association Duel',
-    description: 'Соревнование на скорость с числами',
+    name: 'Pojedynek Skojarzeń',
+    description: 'Zawody na szybkość z liczbami',
     icon: 'Swords',
     difficulty: 4,
-    estimatedTime: '10-15 мин'
+    estimatedTime: '10-15 min'
   }
 ];
 
@@ -88,11 +88,11 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty: number) => {
-    if (difficulty <= 2) return 'text-green-600 bg-green-50 border-green-200';
-    if (difficulty <= 3) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-red-600 bg-red-50 border-red-200';
-  };
+  // const getDifficultyColor = (difficulty: number) => {
+  //   if (difficulty <= 2) return 'text-green-600 bg-green-50 border-green-200';
+  //   if (difficulty <= 3) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+  //   return 'text-red-600 bg-red-50 border-red-200';
+  // };
 
   const getDifficultyStars = (difficulty: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -107,20 +107,20 @@ const HomePage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-white mb-4">
-          Тренируй память с числами
+          Trenuj pamięć z liczbami
         </h1>
         <p className="text-xl text-white/80 mb-8">
-          Выбери игру и начни развивать ассоциативную память
+          Wybierz grę i zacznij rozwijać pamięć asocjacyjną
         </p>
       </div>
 
       {/* Game Settings */}
       <div className="card mb-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">Настройки игры</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Ustawienia gry</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Сложность
+              Trudność
             </label>
             <div className="flex space-x-2">
               {[1, 2, 3, 4, 5].map((level) => (
@@ -141,7 +141,7 @@ const HomePage: React.FC = () => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Конкретное число (опционально)
+              Konkretna liczba (opcjonalnie)
             </label>
             <input
               type="number"
@@ -174,14 +174,14 @@ const HomePage: React.FC = () => {
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Сложность:</span>
+                  <span className="text-sm text-gray-600">Trudność:</span>
                   <div className="flex items-center space-x-1">
                     {getDifficultyStars(game.difficulty)}
                   </div>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Время:</span>
+                  <span className="text-sm text-gray-600">Czas:</span>
                   <div className="flex items-center space-x-1 text-sm text-gray-600">
                     <Timer className="h-4 w-4" />
                     <span>{game.estimatedTime}</span>
@@ -199,7 +199,7 @@ const HomePage: React.FC = () => {
                 ) : (
                   <>
                     <Play className="h-4 w-4" />
-                    Начать игру
+                    Rozpocznij grę
                   </>
                 )}
               </button>
@@ -212,7 +212,7 @@ const HomePage: React.FC = () => {
       {state.gameHistory.length > 0 && (
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            Последние игры
+            Ostatnie gry
           </h2>
           <div className="card">
             <div className="space-y-4">
@@ -227,15 +227,15 @@ const HomePage: React.FC = () => {
                         {gameTypes.find(g => g.id === game.type)?.name || game.type}
                       </h4>
                       <p className="text-sm text-gray-600">
-                        Число: {game.number} • Очки: {game.points}
+                        Liczba: {game.number} • Punkty: {game.points}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-600">
-                      {game.status === 'completed' ? '✅ Завершена' : 
-                       game.status === 'failed' ? '❌ Неудача' : 
-                       '🔄 В процессе'}
+                      {game.status === 'completed' ? '✅ Zakończona' : 
+                       game.status === 'failed' ? '❌ Niepowodzenie' : 
+                       '🔄 W trakcie'}
                     </div>
                     <div className="text-xs text-gray-500">
                       {game.completedAt ? 

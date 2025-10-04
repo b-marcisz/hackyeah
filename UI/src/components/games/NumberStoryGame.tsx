@@ -33,7 +33,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
 
   const handleElementsSubmit = () => {
     if (!selectedHero || !selectedAction || !selectedObject) {
-      alert('Пожалуйста, выберите все три элемента');
+      alert('Proszę wybrać wszystkie trzy elementy');
       return;
     }
     setStep('story');
@@ -41,7 +41,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
 
   const handleStorySubmit = async () => {
     if (!storyText.trim()) {
-      alert('Пожалуйста, напишите историю');
+      alert('Proszę napisać historię');
       return;
     }
 
@@ -71,13 +71,13 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
       <div className="card">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Выберите элементы для истории
+            Wybierz elementy do historii
           </h2>
           <div className="text-6xl font-bold text-blue-600 mb-4">
             {game.number}
           </div>
           <p className="text-lg text-gray-600">
-            Выберите героя, действие и объект, которые будут использованы в вашей истории
+            Wybierz bohatera, działanie i przedmiot, które będą użyte w Twojej historii
           </p>
         </div>
 
@@ -85,7 +85,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           {/* Hero Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-700 text-center">
-              Герой
+              Bohater
             </h3>
             <div className="space-y-2">
               {categories.hero.map((hero, index) => (
@@ -112,7 +112,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           {/* Action Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-700 text-center">
-              Действие
+              Działanie
             </h3>
             <div className="space-y-2">
               {categories.action.map((action, index) => (
@@ -139,7 +139,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           {/* Object Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-700 text-center">
-              Объект
+              Przedmiot
             </h3>
             <div className="space-y-2">
               {categories.object.map((object, index) => (
@@ -168,7 +168,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
         {isElementsComplete && (
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-              Выбранные элементы:
+              Wybrane elementy:
             </h3>
             <div className="text-center text-xl">
               <span className="font-bold text-red-600">{selectedHero}</span>
@@ -187,7 +187,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
             className="btn btn-primary text-lg px-8 py-3"
           >
             <BookOpen className="h-5 w-5" />
-            Перейти к написанию истории
+            Przejdź do pisania historii
           </button>
         </div>
       </div>
@@ -198,20 +198,20 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
     <div className="card">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Напишите историю
+          Napisz historię
         </h2>
         <div className="text-6xl font-bold text-blue-600 mb-4">
           {game.number}
         </div>
         <p className="text-lg text-gray-600">
-          Создайте интересную историю, используя выбранные элементы
+          Stwórz interesującą historię, używając wybranych elementów
         </p>
       </div>
 
       {/* Selected Elements Reminder */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-6">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-          Используйте эти элементы в истории:
+          Użyj tych elementów w historii:
         </h3>
         <div className="text-center text-xl">
           <span className="font-bold text-red-600">{selectedHero}</span>
@@ -225,28 +225,28 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
       {/* Story Writing Area */}
       <div className="mb-6">
         <label className="block text-lg font-semibold text-gray-700 mb-4">
-          Ваша история:
+          Twoja historia:
         </label>
         <textarea
           value={storyText}
           onChange={(e) => setStoryText(e.target.value)}
-          placeholder="Напишите интересную историю, используя выбранные элементы..."
+          placeholder="Napisz interesującą historię, używając wybranych elementów..."
           className="w-full h-48 p-4 border-2 border-gray-300 rounded-lg resize-none focus:border-blue-500 focus:outline-none"
           disabled={isSubmitting}
         />
         <div className="text-right text-sm text-gray-500 mt-2">
-          {storyText.length} символов
+          {storyText.length} znaków
         </div>
       </div>
 
       {/* Tips */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-        <h4 className="font-semibold text-yellow-800 mb-2">💡 Советы для хорошей истории:</h4>
+        <h4 className="font-semibold text-yellow-800 mb-2">💡 Wskazówki do dobrej historii:</h4>
         <ul className="text-yellow-700 text-sm space-y-1">
-          <li>• Сделайте историю логичной и последовательной</li>
-          <li>• Используйте все три элемента естественным образом</li>
-          <li>• Добавьте детали и эмоции</li>
-          <li>• Сделайте историю запоминающейся</li>
+          <li>• Uczyń historię logiczną i spójną</li>
+          <li>• Użyj wszystkich trzech elementów w naturalny sposób</li>
+          <li>• Dodaj szczegóły i emocje</li>
+          <li>• Uczyń historię niezapomnianą</li>
         </ul>
       </div>
 
@@ -260,12 +260,12 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           {isSubmitting ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Отправка...</span>
+              <span>Wysyłanie...</span>
             </div>
           ) : (
             <>
               <Send className="h-5 w-5" />
-              Отправить историю
+              Wyślij historię
             </>
           )}
         </button>
@@ -276,7 +276,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           className="btn btn-secondary text-lg px-8 py-3"
         >
           <RotateCcw className="h-5 w-5" />
-          Очистить
+          Wyczyść
         </button>
         
         <button
@@ -284,7 +284,7 @@ const NumberStoryGame: React.FC<NumberStoryGameProps> = ({
           disabled={isSubmitting}
           className="btn btn-secondary text-lg px-8 py-3"
         >
-          Изменить элементы
+          Zmień elementy
         </button>
       </div>
     </div>
