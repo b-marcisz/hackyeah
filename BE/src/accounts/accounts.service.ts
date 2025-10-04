@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
@@ -35,6 +35,9 @@ export class AccountsService {
     if (!account) {
       account = this.accountRepository.create({ name: accountName, users: [] });
       await this.accountRepository.save(account);
+    }
+    if (userDto.code != account.code) {
+      throw new ForbiddenException();
     }
     const user = this.userRepository.create({ ...userDto, account });
     await this.userRepository.save(user);

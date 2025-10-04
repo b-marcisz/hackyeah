@@ -49,8 +49,7 @@ export class AccountsController {
   @Post(':accountName/users')
   addUser(
     @Param('accountName') accountName: string,
-    @Body() createUserDto: CreateUserDto,
-    @Headers('authorization') authorization: string,
+    @Body() createUserDto: CreateUserDto
   ) {
     return this.accountsService.addUser(accountName, createUserDto);
   }
