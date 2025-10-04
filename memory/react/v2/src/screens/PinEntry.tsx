@@ -1,20 +1,34 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, useWindowDimensions } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
+import { accountsService } from '../api';
+import { getStoredAccount } from '../utils/storage';
 
 interface PinEntryProps {
-  onPinCorrect: () => void;
+  onPinCorrect: (pin: string) => void;
   onBack: () => void;
 }
 
 export default function PinEntry({ onPinCorrect, onBack }: PinEntryProps) {
+  const [accountName, setAccountName] = useState<string>('Jan');
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [pin, setPin] = useState('');
   const [error, setError] = useState(false);
-  const CORRECT_PIN = '1234'; // PIN for account "Jan"
 
-  const handleNumberPress = (num: string) => {
+  // Load account name from storage
+  useEffect(() => {
+    loadAccountName();
+  }, []);
+
+  const loadAccountName = async () => {
+    const storedAccount = await getStoredAccount();
+    if (storedAccount) {
+      setAccountName(storedAccount.name);
+    }
+  };
+
+  const handleNumberPress = async (num: string) => {
     if (pin.length < 4) {
       const newPin = pin + num;
       setPin(newPin);
@@ -22,10 +36,20 @@ export default function PinEntry({ onPinCorrect, onBack }: PinEntryProps) {
 
       // Auto-check when 4 digits entered
       if (newPin.length === 4) {
-        setTimeout(() => {
-          if (newPin === CORRECT_PIN) {
-            onPinCorrect();
-          } else {
+        setTimeout(async () => {
+          try {
+            const isValid = await accountsService.verifyPin('Jan', newPin);
+            if (isValid) {
+              onPinCorrect(newPin);
+            } else {
+              setError(true);
+              setTimeout(() => {
+                setPin('');
+                setError(false);
+              }, 1000);
+            }
+          } catch (error) {
+            console.error('Error verifying PIN:', error);
             setError(true);
             setTimeout(() => {
               setPin('');

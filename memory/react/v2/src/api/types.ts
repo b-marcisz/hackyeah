@@ -46,6 +46,13 @@ export interface CreateUserDto {
   settings: UserSettings;
 }
 
+export interface UpdateUserDto {
+  name?: string;
+  role?: UserRole;
+  color?: ProfileColor;
+  settings?: UserSettings;
+}
+
 export interface UserDto {
   id: string;
   name: string;

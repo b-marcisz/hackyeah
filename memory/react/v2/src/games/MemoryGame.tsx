@@ -9,7 +9,11 @@ interface Tile {
   matched: boolean;
 }
 
-export default function MemoryGame() {
+interface MemoryGameProps {
+  onBack?: () => void;
+}
+
+export default function MemoryGame({ onBack }: MemoryGameProps) {
   const { width, height } = useWindowDimensions();
   const iconIndices = [0, 1, 2, 3, 4, 5, 6, 7];
   const [tiles, setTiles] = useState<Tile[]>([]);
@@ -232,6 +236,11 @@ export default function MemoryGame() {
 
         {/* Top info bar */}
         <View style={[styles.topBar, isLandscape && styles.topBarLandscape]}>
+          {onBack && (
+            <TouchableOpacity style={[styles.button, isLandscape && styles.buttonLandscape]} onPress={onBack}>
+              <FontAwesome name="arrow-left" size={isLandscape ? 20 : 28} color="#fff" />
+            </TouchableOpacity>
+          )}
           <Text style={[styles.movesText, isLandscape && styles.movesTextLandscape]}>
             Ruchy: {moves}
           </Text>
