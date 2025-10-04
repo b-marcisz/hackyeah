@@ -1,0 +1,35 @@
+meta {
+  name: Rate Association
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/number-associations/{{associationId}}/rate
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "rating": 5
+  }
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:3000
+  associationId: 1
+}
+
+tests {
+  test("Rate association", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property('id');
+    expect(res.getBody()).to.have.property('rating');
+    expect(res.getBody()).to.have.property('total_votes');
+  });
+}

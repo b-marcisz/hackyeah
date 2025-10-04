@@ -1,0 +1,61 @@
+meta {
+  name: Number Association API
+  type: http
+  version: 1
+}
+
+vars {
+  baseUrl: http://localhost:3000
+  number: 42
+  associationId: 1
+}
+
+### Generate Association
+POST {{baseUrl}}/number-associations/{{number}}/generate
+Content-Type: application/json
+
+{
+  "number": {{number}}
+}
+
+> {%
+  client.test("Generate association", function() {
+    client.assert(response.status === 200, "Response status is 200");
+    client.assert(response.body.hasOwnProperty('id'), "Response has id");
+    client.assert(response.body.hasOwnProperty('hero'), "Response has hero");
+    client.assert(response.body.hasOwnProperty('action'), "Response has action");
+    client.assert(response.body.hasOwnProperty('object'), "Response has object");
+    client.assert(response.body.hasOwnProperty('explanation'), "Response has explanation");
+  });
+%}
+
+### Get Association
+GET {{baseUrl}}/number-associations/{{number}}
+
+> {%
+  client.test("Get association", function() {
+    client.assert(response.status === 200, "Response status is 200");
+    client.assert(response.body.hasOwnProperty('id'), "Response has id");
+    client.assert(response.body.hasOwnProperty('hero'), "Response has hero");
+    client.assert(response.body.hasOwnProperty('action'), "Response has action");
+    client.assert(response.body.hasOwnProperty('object'), "Response has object");
+    client.assert(response.body.hasOwnProperty('explanation'), "Response has explanation");
+  });
+%}
+
+### Rate Association
+POST {{baseUrl}}/number-associations/{{associationId}}/rate
+Content-Type: application/json
+
+{
+  "rating": 5
+}
+
+> {%
+  client.test("Rate association", function() {
+    client.assert(response.status === 200, "Response status is 200");
+    client.assert(response.body.hasOwnProperty('id'), "Response has id");
+    client.assert(response.body.hasOwnProperty('rating'), "Response has rating");
+    client.assert(response.body.hasOwnProperty('total_votes'), "Response has total_votes");
+  });
+%}
