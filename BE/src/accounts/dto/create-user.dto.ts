@@ -15,8 +15,4 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsInt()
-  age?: number;
 }

@@ -14,9 +14,6 @@ export class User {
   @Column()
   role: UserRole;
 
-  @Column({ nullable: true })
-  age?: number;
-
   @ManyToOne(() => Account, account => account.users)
   account: Account;
 }
