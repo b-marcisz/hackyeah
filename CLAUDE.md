@@ -306,22 +306,11 @@ Games ─> [Time Limit] ─> TimeLimitReached ─> ProfileSelection
 - TypeScript types for all DTOs
 - Services: `accountsService`, `gamesService`
 
-### Environment Variables
+### Configuration
 
-Backend `.env`:
-```
-DB_HOST=localhost
-DB_PORT=5433
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_DATABASE=assential_db
-PORT=4000
-OPENAI_API_KEY=your_openai_api_key_here
-```
+**Backend**: Running on port 4000 with PostgreSQL database
 
-Frontend `src/api/config.ts`:
-```typescript
-const API_BASE_URL = 'http://localhost:4000';
-// For Android emulator: 'http://10.0.2.2:4000'
-// For physical device: 'http://YOUR_COMPUTER_IP:4000'
-```
+**Frontend API**: Configured in `src/api/config.ts` - set based on your environment:
+- Development: `http://localhost:4000`
+- Android emulator: `http://10.0.2.2:4000`
+- Physical device: `http://YOUR_COMPUTER_IP:4000`
