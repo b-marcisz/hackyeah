@@ -21,7 +21,9 @@
       "Bash(ipconfig)",
       "Bash(python:*)",
       "Bash(npx expo install:*)",
-      "WebFetch(domain:192.168.0.76)"
+      "WebFetch(domain:192.168.0.76)",
+      "Bash(PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d assential_db -c \"TRUNCATE TABLE user_session CASCADE;\")",
+      "Bash(PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d assential_db -c \"\\dt\")"
     ],
     "deny": [],
     "ask": []

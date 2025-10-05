@@ -134,5 +134,16 @@ export class AccountsController {
   ) {
     return this.accountsService.getUserSessionToday(accountName, userId);
   }
-  
+
+  @Patch('sessions/:sessionId')
+  @ApiParam({ name: 'sessionId', type: String, description: 'Session ID' })
+  @ApiBody({ schema: { type: 'object', properties: { totalMinutes: { type: 'number' } } } })
+  @ApiResponse({ status: 200, description: 'Session updated' })
+  @ApiResponse({ status: 404, description: 'Session not found' })
+  async updateSession(
+    @Param('sessionId') sessionId: string,
+    @Body() body: { totalMinutes: number }
+  ) {
+    return this.accountsService.updateSessionTime(sessionId, body.totalMinutes);
+  }
 }

@@ -110,4 +110,13 @@ export const accountsService = {
       throw error;
     }
   },
+
+  /**
+   * Update session time
+   * PATCH /accounts/sessions/{sessionId}
+   */
+  updateSessionTime: async (sessionId: string, totalMinutes: number): Promise<UserSessionDto> => {
+    const response = await apiClient.patch<UserSessionDto>(`/accounts/sessions/${sessionId}`, { totalMinutes });
+    return response.data;
+  },
 };

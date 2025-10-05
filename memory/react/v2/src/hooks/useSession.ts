@@ -71,13 +71,18 @@ export const useSession = ({
     initializeSession();
   }, [initializeSession]);
 
-  // Track elapsed time every minute
+  // Track elapsed time every minute and sync with backend
   useEffect(() => {
     if (!session || loading) return;
 
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       setElapsedMinutes((prev) => {
         const newElapsed = prev + 1;
+
+        // Sync with backend
+        accountsService.updateSessionTime(session.id, newElapsed).catch((error) => {
+          console.error('Failed to update session time:', error);
+        });
 
         // Check for 5-minute warning
         const remainingMinutes = timeLimit - newElapsed;

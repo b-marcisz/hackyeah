@@ -97,7 +97,7 @@ export class AccountsService {
     return !!account;
   }
 
-  async saveUserSession(accountName: string, userId: string): Promise<{created: boolean}> {
+  async saveUserSession(accountName: string, userId: string): Promise<UserSession> {
     const account = await this.accountRepository.findOne({
       where: { name: accountName },
       relations: ['users'],
@@ -111,11 +111,15 @@ export class AccountsService {
       where: { user: { id: userId }, date: today },
     });
 
-    if (existing) return { created: false };
+    if (existing) return existing;
 
-    const session = this.userSessionRepository.create({ user, date: today });
-    await this.userSessionRepository.save(session);
-    return { created: true };
+    const session = this.userSessionRepository.create({
+      user,
+      date: today,
+      startTime: new Date(),
+      totalMinutes: 0
+    });
+    return await this.userSessionRepository.save(session);
   }
 
   async getUserSessionToday(accountName: string, userId: string): Promise<UserSession | null> {
@@ -126,10 +130,22 @@ export class AccountsService {
     if (!account) throw new NotFoundException('Account not found');
     const user = account.users.find(u => u.id === userId);
     if (!user) throw new NotFoundException('User not found');
-  
+
     const today = new Date().toISOString().split('T')[0];
     return await this.userSessionRepository.findOne({
       where: { user: { id: userId }, date: today },
     });
+  }
+
+  async updateSessionTime(sessionId: string, totalMinutes: number): Promise<UserSession> {
+    const session = await this.userSessionRepository.findOne({
+      where: { id: sessionId }
+    });
+    if (!session) throw new NotFoundException('Session not found');
+
+    session.totalMinutes = totalMinutes;
+    session.endTime = new Date();
+
+    return await this.userSessionRepository.save(session);
   }
 }
