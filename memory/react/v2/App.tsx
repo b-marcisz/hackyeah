@@ -7,13 +7,14 @@ import AccountLogin from './src/screens/AccountLogin';
 import ProfileSelection, { Profile } from './src/screens/ProfileSelection';
 import GameDashboard from './src/screens/GameDashboard';
 import MemoryGame from './src/games/MemoryGame';
+import MemoryLessGame from './src/games/MemoryLessGame';
 import PinEntry from './src/screens/PinEntry';
 import AdminPanel from './src/screens/AdminPanel';
 import TimeLimitReached from './src/screens/TimeLimitReached';
 import { useProfiles } from './src/hooks/useProfiles';
 import { getStoredAccount, saveAccount } from './src/utils/storage';
 
-type Screen = 'loading' | 'splash' | 'account-login' | 'account-setup' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
+type Screen = 'loading' | 'splash' | 'account-login' | 'account-setup' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'memory-less-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('loading');
@@ -80,6 +81,8 @@ export default function App() {
   const handleSelectGame = (gameId: string) => {
     if (gameId === 'memory') {
       setCurrentScreen('memory-game');
+    } else if (gameId === 'memory-less') {
+      setCurrentScreen('memory-less-game');
     }
     // TODO: Add other games
   };
@@ -166,6 +169,8 @@ export default function App() {
         );
       case 'memory-game':
         return <MemoryGame onBack={handleBackToGameDashboard} />;
+      case 'memory-less-game':
+        return <MemoryLessGame onBack={handleBackToGameDashboard} />;
       case 'pin-entry':
         return (
           <PinEntry
