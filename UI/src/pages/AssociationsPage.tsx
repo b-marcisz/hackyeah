@@ -38,7 +38,7 @@ const AssociationsPage: React.FC = () => {
       setError(null);
       
       // Fetch associations
-      const response = await fetch('http://localhost:4000/number-associations/all/primary');
+          const response = await fetch('http://10.250.162.191:4002/number-associations/all/primary');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,7 +56,7 @@ const AssociationsPage: React.FC = () => {
 
   const fetchUserStats = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+        const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       const response = await fetch(`${apiUrl}/user-progress`);
       
       if (response.ok) {
@@ -105,19 +105,19 @@ const AssociationsPage: React.FC = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-black/80 border-b-2 border-white/20">
-                <th className="text-left py-0.5 px-0.5 font-bold text-white text-xs">
+                <th className="text-center py-4 px-4 font-bold text-white text-sm w-1/6">
                   <Hash className="h-4 w-4 mr-2 inline" />
                   Liczba
                 </th>
-                <th className="text-left py-0.5 px-0.5 font-bold text-red-200 text-xs">
+                <th className="text-center py-4 px-4 font-bold text-red-200 text-sm w-1/4">
                   <User className="h-4 w-4 mr-2 inline" />
                   Bohater
                 </th>
-                <th className="text-left py-0.5 px-0.5 font-bold text-white text-xs">
+                <th className="text-center py-4 px-4 font-bold text-white text-sm w-1/4">
                   <Zap className="h-4 w-4 mr-2 inline" />
                   Działanie
                 </th>
-                <th className="text-left py-0.5 px-0.5 font-bold text-white text-xs">
+                <th className="text-center py-4 px-4 font-bold text-white text-sm w-1/4">
                   <Package className="h-4 w-4 mr-2 inline" />
                   Przedmiot
                 </th>
@@ -129,41 +129,43 @@ const AssociationsPage: React.FC = () => {
                   key={index} 
                   className="border-b border-white/20 hover:bg-white/5 transition-all duration-300 hover:shadow-lg"
                 >
-                  <td className="py-0.5 px-0.5">
-                    <div className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-purple-400 animate-pulse">
-                      #{association.number}
+                  <td className="py-4 px-4 w-1/6">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-purple-400 animate-pulse">
+                        #{association.number}
+                      </div>
                     </div>
                   </td>
-                  <td className="py-0.5 px-0.5">
+                  <td className="py-4 px-4 w-1/4">
                     <div className="flex items-center justify-center">
                       <AssociationImage
-                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/heroes/${association.number}_${association.hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/heroes/${association.number}_${association.hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                         alt={association.hero}
                         title={association.hero}
-                        size="sm"
-                        className="scale-75"
+                        size="md"
+                        className="w-16 h-16"
                       />
                     </div>
                   </td>
-                  <td className="py-0.5 px-0.5">
+                  <td className="py-4 px-4 w-1/4">
                     <div className="flex items-center justify-center">
                       <AssociationImage
-                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/actions/${association.number}_${association.action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/actions/${association.number}_${association.action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                         alt={association.action}
                         title={association.action}
-                        size="sm"
-                        className="scale-75"
+                        size="md"
+                        className="w-16 h-16"
                       />
                     </div>
                   </td>
-                  <td className="py-0.5 px-0.5">
+                  <td className="py-4 px-4 w-1/4">
                     <div className="flex items-center justify-center">
                       <AssociationImage
-                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/objects/${association.number}_${association.object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                        src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/objects/${association.number}_${association.object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                         alt={association.object}
                         title={association.object}
-                        size="sm"
-                        className="scale-75"
+                        size="md"
+                        className="w-16 h-16"
                       />
                     </div>
                   </td>

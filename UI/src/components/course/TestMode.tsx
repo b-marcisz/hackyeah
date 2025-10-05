@@ -36,7 +36,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
       setIsLoading(true);
       setError(null);
       
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       
       // Сначала получаем прогресс пользователя
       const progressResponse = await fetch(`${apiUrl}/user-progress`);
@@ -117,7 +117,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
         }
       } else {
         // Если правильный ответ, обновляем прогресс на сервере
-        const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+        const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
         await fetch(`${apiUrl}/user-progress/update`, {
           method: 'POST',
           headers: {
@@ -150,7 +150,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
       } else {
         // Пул завершен - обновляем прогресс и переходим к следующему пулу
         try {
-          const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+          const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
           await fetch(`${apiUrl}/user-progress/update`, {
             method: 'POST',
             headers: {
@@ -284,7 +284,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
                     }`}
                   >
                     <img 
-                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/heroes/${currentNumber}_${hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/heroes/${currentNumber}_${hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                       alt={hero}
                       className="w-8 h-8 object-contain"
                       onError={(e) => {
@@ -312,7 +312,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
                     }`}
                   >
                     <img 
-                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/actions/${currentNumber}_${action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/actions/${currentNumber}_${action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                       alt={action}
                       className="w-8 h-8 object-contain"
                       onError={(e) => {
@@ -340,7 +340,7 @@ const TestMode: React.FC<TestModeProps> = ({ onComplete, onError }) => {
                     }`}
                   >
                     <img 
-                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/objects/${currentNumber}_${object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                      src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/objects/${currentNumber}_${object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                       alt={object}
                       className="w-8 h-8 object-contain"
                       onError={(e) => {

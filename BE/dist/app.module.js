@@ -19,7 +19,7 @@ const card_entity_1 = require("./cards/card.entity");
 const accounts_module_1 = require("./accounts/accounts.module");
 const account_entity_1 = require("./accounts/entities/account.entity");
 const user_entity_1 = require("./accounts/entities/user.entity");
-const session_entity_1 = require("./accounts/entities/session.entity");
+const user_progress_entity_1 = require("./entities/user-progress.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -42,7 +42,7 @@ exports.AppModule = AppModule = __decorate([
                         username: configService.get('DB_USERNAME'),
                         password: configService.get('DB_PASSWORD'),
                         database: configService.get('DB_DATABASE'),
-                        entities: [number_association_entity_1.NumberAssociation, card_entity_1.Card, game_entity_1.Game, user_entity_1.User, account_entity_1.Account, session_entity_1.UserSession],
+                        entities: [number_association_entity_1.NumberAssociation, card_entity_1.Card, game_entity_1.Game, user_entity_1.User, account_entity_1.Account, user_progress_entity_1.UserProgress],
                         autoLoadEntities: false,
                         synchronize: true
                     };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 import { GameType, GameInfo } from '../types';
@@ -70,6 +70,11 @@ const HomePage: React.FC = () => {
   const { startGame, state } = useGame();
   const [selectedDifficulty, setSelectedDifficulty] = useState(1);
   const [selectedNumber, setSelectedNumber] = useState<number | undefined>(undefined);
+
+  // Автоматическое перенаправление на страницу ассоциаций
+  useEffect(() => {
+    navigate('/associations');
+  }, [navigate]);
 
   const handleStartGame = async (gameType: GameType) => {
     try {

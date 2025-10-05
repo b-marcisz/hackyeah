@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Home } from 'lucide-react';
 import StudyMode from '../components/course/StudyMode';
 import TestMode from '../components/course/TestMode';
 import HintModal from '../components/course/HintModal';
+import HalloweenButton from '../components/ui/HalloweenButton';
 
 type CourseMode = 'study' | 'test';
 
@@ -36,7 +39,7 @@ const Course: React.FC = () => {
   const handleTestComplete = async () => {
     // Обновляем прогресс пользователя
     try {
-      const response = await fetch('http://localhost:4000/user-progress/update', {
+      const response = await fetch('http://10.250.162.191:4002/user-progress/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,6 +82,11 @@ const Course: React.FC = () => {
     window.location.reload();
   };
 
+  const handleExitToMain = () => {
+    // Перенаправляем на главное приложение (React Native)
+    window.location.href = 'http://localhost:8083';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-orange-900">
       {mode === 'study' && (
@@ -99,6 +107,37 @@ const Course: React.FC = () => {
           number={hintData.number}
         />
       )}
+
+      {/* Кнопка Выход в правом нижнем углу */}
+      <motion.div
+        className="fixed bottom-8 right-8 z-50"
+        style={{
+          position: 'fixed',
+          bottom: '32px',
+          right: '32px',
+          zIndex: 50
+        }}
+        initial={{ scale: 1, opacity: 1 }}
+        whileHover={{
+          scale: 1.1,
+          y: -5,
+          transition: { duration: 0.2 }
+        }}
+        whileTap={{
+          scale: 0.95,
+          transition: { duration: 0.1 }
+        }}
+      >
+        <HalloweenButton
+          variant="secondary"
+          size="lg"
+          onClick={handleExitToMain}
+          icon={<Home className="h-6 w-6" />}
+          className="w-[60px]"
+        >
+          {''}
+        </HalloweenButton>
+      </motion.div>
     </div>
   );
 };

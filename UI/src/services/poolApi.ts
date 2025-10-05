@@ -20,7 +20,7 @@ export class PoolApiService {
   private baseUrl: string;
   
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+    this.baseUrl = baseUrl || process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
   }
   
   /**

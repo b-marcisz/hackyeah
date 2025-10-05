@@ -43,7 +43,7 @@ const CoursePage: React.FC = () => {
       setIsLoading(true);
       setError(null);
       
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       const response = await fetch(`${apiUrl}/user-progress`);
       
       if (!response.ok) {

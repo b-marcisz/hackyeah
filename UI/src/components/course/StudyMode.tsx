@@ -37,7 +37,7 @@ const StudyMode: React.FC<StudyModeProps> = ({ onComplete }) => {
       setIsLoading(true);
       setError(null);
       
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       
       // Сначала получаем прогресс пользователя
       const progressResponse = await fetch(`${apiUrl}/user-progress`);
@@ -225,7 +225,7 @@ const StudyMode: React.FC<StudyModeProps> = ({ onComplete }) => {
         // Завершили весь пул - сохраняем прогресс и переходим к следующему пулу
         setTimeout(async () => {
           try {
-            const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+            const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
             
             // Сохраняем прогресс для последнего числа
             await fetch(`${apiUrl}/user-progress/update`, {
@@ -618,7 +618,7 @@ const StudyMode: React.FC<StudyModeProps> = ({ onComplete }) => {
                       >
                         <div className="flex items-center justify-center">
                           <AssociationImage
-                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/heroes/${association.number}_${association.hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/heroes/${association.number}_${association.hero.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                             alt={association.hero}
                             title={association.hero}
                             size="sm"
@@ -664,7 +664,7 @@ const StudyMode: React.FC<StudyModeProps> = ({ onComplete }) => {
                       >
                         <div className="flex items-center justify-center">
                           <AssociationImage
-                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/actions/${association.number}_${association.action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/actions/${association.number}_${association.action.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                             alt={association.action}
                             title={association.action}
                             size="sm"
@@ -710,7 +710,7 @@ const StudyMode: React.FC<StudyModeProps> = ({ onComplete }) => {
                       >
                         <div className="flex items-center justify-center">
                           <AssociationImage
-                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`}/images/objects/${association.number}_${association.object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
+                            src={`${process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`}/images/objects/${association.number}_${association.object.toLowerCase().replace(/[^a-z0-9]/g, '_')}.svg`}
                             alt={association.object}
                             title={association.object}
                             size="sm"

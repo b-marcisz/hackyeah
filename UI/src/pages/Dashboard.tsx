@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
       setIsLoading(true);
       setError(null);
       
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       console.log('🔗 Fetching stats from:', `${apiUrl}/user-progress`);
       const response = await fetch(`${apiUrl}/user-progress`);
       
@@ -57,7 +57,7 @@ const Dashboard: React.FC = () => {
 
   const fetchAssociations = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
       console.log('🔗 Fetching associations from:', `${apiUrl}/number-associations/all/primary`);
       const response = await fetch(`${apiUrl}/number-associations/all/primary`);
       
@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
   const handleResetProgress = async () => {
     if (window.confirm('Czy na pewno chcesz zresetować postęp? Wszystkie dane zostaną utracone.')) {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4000`;
+        const apiUrl = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:4002`;
         const response = await fetch(`${apiUrl}/user-progress/reset`, {
           method: 'POST',
           headers: {
