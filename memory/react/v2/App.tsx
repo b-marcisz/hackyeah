@@ -43,9 +43,9 @@ export default function App() {
   const checkStoredAccount = async () => {
     const storedAccount = await getStoredAccount();
     if (storedAccount) {
-      // Account exists, set it and show splash
+      // Account exists, set it and show splash (skip splash on web)
       setAccountName(storedAccount.name);
-      setCurrentScreen('splash');
+      setCurrentScreen(Platform.OS === 'web' ? 'profile-selection' : 'splash');
     } else {
       // No account, show login screen (user can choose to login or create new)
       setCurrentScreen('account-login');
@@ -55,13 +55,13 @@ export default function App() {
   const handleAccountCreated = async (name: string, pin: string) => {
     await saveAccount(name, pin);
     setAccountName(name);
-    setCurrentScreen('splash');
+    setCurrentScreen(Platform.OS === 'web' ? 'profile-selection' : 'splash');
   };
 
   const handleLoginSuccess = async (name: string, pin: string) => {
     await saveAccount(name, pin);
     setAccountName(name);
-    setCurrentScreen('splash');
+    setCurrentScreen(Platform.OS === 'web' ? 'profile-selection' : 'splash');
   };
 
   const handleShowLogin = () => {
