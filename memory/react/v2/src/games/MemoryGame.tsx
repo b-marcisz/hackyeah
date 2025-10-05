@@ -242,7 +242,7 @@ export default function MemoryGame({ onBack }: MemoryGameProps) {
             </TouchableOpacity>
           )}
           <Text style={[styles.movesText, isLandscape && styles.movesTextLandscape]}>
-            Ruchy: {moves}
+            Moves: {moves}
           </Text>
           <TouchableOpacity style={[styles.button, isLandscape && styles.buttonLandscape]} onPress={resetGame}>
             <FontAwesome name="refresh" size={isLandscape ? 20 : 28} color="#fff" />
@@ -252,7 +252,7 @@ export default function MemoryGame({ onBack }: MemoryGameProps) {
         {/* Win message */}
         {matchedCount === tiles.length && tiles.length > 0 && (
           <View style={styles.winBanner}>
-            <Text style={[styles.winText, { fontSize: isLandscape ? 20 : 28 }]}>🎉 Wygrałeś! 🎉</Text>
+            <Text style={[styles.winText, { fontSize: isLandscape ? 20 : 28 }]}>🎉 You Won! 🎉</Text>
           </View>
         )}
 

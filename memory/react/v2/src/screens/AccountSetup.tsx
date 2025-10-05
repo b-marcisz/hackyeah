@@ -19,17 +19,17 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
   const handleCreateAccount = async () => {
     // Validation
     if (!accountName.trim()) {
-      Alert.alert('Błąd', 'Podaj nazwę konta');
+      Alert.alert('Error', 'Please enter account name');
       return;
     }
 
     if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-      Alert.alert('Błąd', 'PIN musi składać się z 4 cyfr');
+      Alert.alert('Error', 'PIN must be 4 digits');
       return;
     }
 
     if (pin !== confirmPin) {
-      Alert.alert('Błąd', 'PINy nie są zgodne');
+      Alert.alert('Error', 'PINs do not match');
       return;
     }
 
@@ -41,7 +41,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
         code: pin,
       });
 
-      Alert.alert('Sukces', 'Konto zostało utworzone!', [
+      Alert.alert('Success', 'Account created!', [
         {
           text: 'OK',
           onPress: () => onAccountCreated(accountName.trim(), pin),
@@ -49,7 +49,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
       ]);
     } catch (error: any) {
       console.error('Error creating account:', error);
-      Alert.alert('Błąd', error.response?.data?.message || 'Nie udało się utworzyć konta. Spróbuj ponownie.');
+      Alert.alert('Error', error.response?.data?.message || 'Failed to create account. Try again.');
     } finally {
       setIsCreating(false);
     }
@@ -63,20 +63,20 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
       >
         <View style={styles.content}>
           <Text style={[styles.title, isLandscape && styles.titleLandscape]}>
-            Witaj!
+            Welcome!
           </Text>
           <Text style={[styles.subtitle, isLandscape && styles.subtitleLandscape]}>
-            Utwórz konto aby rozpocząć
+            Create account to get started
           </Text>
 
           <View style={styles.form}>
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Nazwa konta</Text>
+            <Text style={styles.label}>Account name</Text>
             <TextInput
               style={styles.input}
               value={accountName}
               onChangeText={setAccountName}
-              placeholder="np. Rodzina Kowalskich"
+              placeholder="e.g. Smith Family"
               placeholderTextColor="rgba(255, 255, 255, 0.3)"
               autoCapitalize="words"
               editable={!isCreating}
@@ -84,7 +84,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>PIN (4 cyfry)</Text>
+            <Text style={styles.label}>PIN (4 digits)</Text>
             <TextInput
               style={styles.input}
               value={pin}
@@ -120,7 +120,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
             disabled={isCreating}
           >
             <Text style={styles.createButtonText}>
-              {isCreating ? 'Tworzenie...' : 'Utwórz konto'}
+              {isCreating ? 'Creating...' : 'Create account'}
             </Text>
           </TouchableOpacity>
 
@@ -131,7 +131,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
             disabled={isCreating}
           >
             <Text style={styles.haveAccountText}>
-              Masz już konto? Zaloguj się
+              Already have an account? Login
             </Text>
           </TouchableOpacity>
         </View>
@@ -139,7 +139,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
           <View style={styles.infoBox}>
             <FontAwesome name="info-circle" size={16} color="#4FACFE" />
             <Text style={styles.infoText}>
-              PIN będzie potrzebny do zarządzania profilami dzieci
+              PIN will be needed to manage children's profiles
             </Text>
           </View>
         </View>

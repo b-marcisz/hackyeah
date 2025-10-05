@@ -18,12 +18,12 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
   const handleLogin = async () => {
     // Validation
     if (!accountName.trim()) {
-      Alert.alert('Błąd', 'Podaj nazwę konta');
+      Alert.alert('Error', 'Please enter account name');
       return;
     }
 
     if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-      Alert.alert('Błąd', 'PIN musi składać się z 4 cyfr');
+      Alert.alert('Error', 'PIN must be 4 digits');
       return;
     }
 
@@ -34,11 +34,11 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
       if (isValid) {
         onLoginSuccess(accountName.trim(), pin);
       } else {
-        Alert.alert('Błąd', 'Nieprawidłowa nazwa konta lub PIN');
+        Alert.alert('Error', 'Invalid account name or PIN');
       }
     } catch (error: any) {
       console.error('Error logging in:', error);
-      Alert.alert('Błąd', 'Nie udało się zalogować. Sprawdź nazwę konta i PIN.');
+      Alert.alert('Error', 'Failed to login. Check account name and PIN.');
     } finally {
       setIsLoggingIn(false);
     }
@@ -52,20 +52,20 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
       >
         <View style={styles.content}>
           <Text style={[styles.title, isLandscape && styles.titleLandscape]}>
-            Witaj ponownie!
+            Welcome back!
           </Text>
           <Text style={[styles.subtitle, isLandscape && styles.subtitleLandscape]}>
-            Zaloguj się do swojego konta
+            Login to your account
           </Text>
 
           <View style={styles.form}>
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Nazwa konta</Text>
+            <Text style={styles.label}>Account name</Text>
             <TextInput
               style={styles.input}
               value={accountName}
               onChangeText={setAccountName}
-              placeholder="Wpisz nazwę konta"
+              placeholder="Enter account name"
               placeholderTextColor="rgba(255, 255, 255, 0.3)"
               autoCapitalize="words"
               editable={!isLoggingIn}
@@ -74,7 +74,7 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>PIN (4 cyfry)</Text>
+            <Text style={styles.label}>PIN (4 digits)</Text>
             <TextInput
               style={styles.input}
               value={pin}
@@ -95,7 +95,7 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
             disabled={isLoggingIn}
           >
             <Text style={styles.loginButtonText}>
-              {isLoggingIn ? 'Logowanie...' : 'Zaloguj się'}
+              {isLoggingIn ? 'Logging in...' : 'Login'}
             </Text>
           </TouchableOpacity>
 
@@ -106,7 +106,7 @@ export default function AccountLogin({ onLoginSuccess, onCreateNew }: AccountLog
             disabled={isLoggingIn}
           >
             <Text style={styles.createNewText}>
-              Nie masz konta? Utwórz nowe
+              Don't have an account? Create new
             </Text>
           </TouchableOpacity>
         </View>

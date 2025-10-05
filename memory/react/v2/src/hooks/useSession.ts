@@ -22,6 +22,8 @@ export const useSession = ({
   const [hasShownWarning, setHasShownWarning] = useState(false);
   const [hasShown1MinWarning, setHasShown1MinWarning] = useState(false);
   const isMountedRef = useRef(false);
+  const isInitializingRef = useRef(false);
+  const timeLimitRef = useRef(timeLimit);
 
   // Use refs for callbacks to avoid re-creating interval
   const onTimeWarningRef = useRef(onTimeWarning);
@@ -30,11 +32,19 @@ export const useSession = ({
   useEffect(() => {
     onTimeWarningRef.current = onTimeWarning;
     onTimeExpiredRef.current = onTimeExpired;
-  }, [onTimeWarning, onTimeExpired]);
+    timeLimitRef.current = timeLimit;
+  }, [onTimeWarning, onTimeExpired, timeLimit]);
 
   // Initialize or get today's session
   const initializeSession = useCallback(async () => {
+    // Prevent concurrent initialization
+    if (isInitializingRef.current) {
+      console.log('Already initializing session, skipping...');
+      return;
+    }
+
     try {
+      isInitializingRef.current = true;
       setLoading(true);
 
       // Check if session already exists for today
@@ -52,7 +62,7 @@ export const useSession = ({
       setElapsedMinutes(todaySession.totalMinutes || 0);
 
       // Calculate effective time limit with extensions
-      const effectiveTimeLimit = timeLimit + (todaySession.extendedMinutes || 0);
+      const effectiveTimeLimit = timeLimitRef.current + (todaySession.extendedMinutes || 0);
 
       // Check if already exceeded on re-entry
       if (todaySession.totalMinutes >= effectiveTimeLimit) {
@@ -66,28 +76,37 @@ export const useSession = ({
       console.error('Error initializing session:', error);
     } finally {
       setLoading(false);
+      isInitializingRef.current = false;
     }
-  }, [accountName, userId, timeLimit]);
+  }, [accountName, userId]);
 
   // Start session on mount
   useEffect(() => {
     initializeSession();
-    isMountedRef.current = true;
   }, [initializeSession]);
+
+  // Mark as mounted in a separate effect to ensure it runs after initial render
+  useEffect(() => {
+    isMountedRef.current = true;
+  }, []);
 
   // Handle time expiration check in a separate effect (only after initial mount)
   useEffect(() => {
-    if (!session || loading || !isMountedRef.current) return;
+    if (!session || loading) return;
 
-    const effectiveTimeLimit = timeLimit + (session.extendedMinutes || 0);
+    // Don't run on first render
+    if (!isMountedRef.current) return;
+
+    const effectiveTimeLimit = timeLimitRef.current + (session.extendedMinutes || 0);
 
     if (session.totalMinutes >= effectiveTimeLimit) {
-      // Use queueMicrotask to defer the callback until after render is complete
-      queueMicrotask(() => {
+      // Use setTimeout to ensure callback runs after all renders complete
+      const timer = setTimeout(() => {
         onTimeExpiredRef.current();
-      });
+      }, 100);
+      return () => clearTimeout(timer);
     }
-  }, [session, loading, timeLimit]);
+  }, [session, loading]);
 
   // Track elapsed time every minute and sync with backend
   useEffect(() => {
@@ -103,7 +122,7 @@ export const useSession = ({
         });
 
         // Calculate effective time limit with extensions
-        const effectiveTimeLimit = timeLimit + (session.extendedMinutes || 0);
+        const effectiveTimeLimit = timeLimitRef.current + (session.extendedMinutes || 0);
 
         // Check for warnings
         const remainingMinutes = effectiveTimeLimit - newElapsed;
@@ -131,19 +150,24 @@ export const useSession = ({
     }, 60000); // Every minute
 
     return () => clearInterval(interval);
-  }, [session, loading, timeLimit, hasShownWarning, hasShown1MinWarning]);
+  }, [session, loading, hasShownWarning, hasShown1MinWarning]);
 
   const remainingMinutes = useMemo(() => {
-    const effectiveTimeLimit = timeLimit + (session?.extendedMinutes || 0);
+    const effectiveTimeLimit = timeLimitRef.current + (session?.extendedMinutes || 0);
     return Math.max(0, effectiveTimeLimit - elapsedMinutes);
-  }, [timeLimit, elapsedMinutes, session?.extendedMinutes]);
+  }, [elapsedMinutes, session?.extendedMinutes]);
+
+  const isExpired = useMemo(() => {
+    const effectiveTimeLimit = timeLimitRef.current + (session?.extendedMinutes || 0);
+    return elapsedMinutes >= effectiveTimeLimit;
+  }, [elapsedMinutes, session?.extendedMinutes]);
 
   return {
     session,
     loading,
     elapsedMinutes,
     remainingMinutes,
-    isExpired: elapsedMinutes >= (timeLimit + (session?.extendedMinutes || 0)),
+    isExpired,
     refreshSession: initializeSession,
   };
 };

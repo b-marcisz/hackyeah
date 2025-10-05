@@ -275,7 +275,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
               {expandedProfiles.has(profile.id) && (
                 <View style={styles.timeLimitSettings}>
                   <Text style={styles.settingLabel}>
-                    Czas gry dziennie:
+                    Daily play time:
                   </Text>
                   <View style={styles.timeOptions}>
                     {timeLimitOptions.map((minutes) => (
