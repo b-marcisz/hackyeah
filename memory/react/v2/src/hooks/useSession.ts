@@ -5,7 +5,7 @@ interface UseSessionProps {
   accountName: string;
   userId: string;
   timeLimit: number; // in minutes
-  onTimeWarning: () => void; // 5 minutes remaining
+  onTimeWarning: (remainingMinutes: number) => void; // called at 5 min and 1 min remaining
   onTimeExpired: () => void; // time limit exceeded
 }
 
@@ -20,6 +20,8 @@ export const useSession = ({
   const [loading, setLoading] = useState(true);
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [hasShownWarning, setHasShownWarning] = useState(false);
+  const [hasShown1MinWarning, setHasShown1MinWarning] = useState(false);
+  const isMountedRef = useRef(false);
 
   // Use refs for callbacks to avoid re-creating interval
   const onTimeWarningRef = useRef(onTimeWarning);
@@ -55,9 +57,7 @@ export const useSession = ({
       // Check if already exceeded on re-entry
       if (todaySession.totalMinutes >= effectiveTimeLimit) {
         console.log('Time limit already exceeded on session initialization');
-        setTimeout(() => {
-          onTimeExpiredRef.current();
-        }, 500); // Small delay to ensure UI is ready
+        // Use a separate effect to handle expiration to avoid setState during render
       } else if (effectiveTimeLimit - todaySession.totalMinutes <= 5) {
         // If 5 minutes or less remaining, show warning immediately
         setHasShownWarning(true);
@@ -72,7 +72,22 @@ export const useSession = ({
   // Start session on mount
   useEffect(() => {
     initializeSession();
+    isMountedRef.current = true;
   }, [initializeSession]);
+
+  // Handle time expiration check in a separate effect (only after initial mount)
+  useEffect(() => {
+    if (!session || loading || !isMountedRef.current) return;
+
+    const effectiveTimeLimit = timeLimit + (session.extendedMinutes || 0);
+
+    if (session.totalMinutes >= effectiveTimeLimit) {
+      // Use queueMicrotask to defer the callback until after render is complete
+      queueMicrotask(() => {
+        onTimeExpiredRef.current();
+      });
+    }
+  }, [session, loading, timeLimit]);
 
   // Track elapsed time every minute and sync with backend
   useEffect(() => {
@@ -90,12 +105,19 @@ export const useSession = ({
         // Calculate effective time limit with extensions
         const effectiveTimeLimit = timeLimit + (session.extendedMinutes || 0);
 
-        // Check for 5-minute warning
+        // Check for warnings
         const remainingMinutes = effectiveTimeLimit - newElapsed;
+
         if (remainingMinutes === 5 && !hasShownWarning) {
           console.log('5 minutes remaining!');
           setHasShownWarning(true);
-          onTimeWarningRef.current();
+          onTimeWarningRef.current(5);
+        }
+
+        if (remainingMinutes === 1 && !hasShown1MinWarning) {
+          console.log('1 minute remaining!');
+          setHasShown1MinWarning(true);
+          onTimeWarningRef.current(1);
         }
 
         // Check if time exceeded
@@ -109,7 +131,7 @@ export const useSession = ({
     }, 60000); // Every minute
 
     return () => clearInterval(interval);
-  }, [session, loading, timeLimit, hasShownWarning]);
+  }, [session, loading, timeLimit, hasShownWarning, hasShown1MinWarning]);
 
   const remainingMinutes = useMemo(() => {
     const effectiveTimeLimit = timeLimit + (session?.extendedMinutes || 0);

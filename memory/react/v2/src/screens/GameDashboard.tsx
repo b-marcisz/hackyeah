@@ -25,10 +25,14 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   // Session management callbacks (memoized to prevent re-renders)
-  const handleTimeWarning = useCallback(() => {
+  const handleTimeWarning = useCallback((remainingMinutes: number) => {
+    const message = remainingMinutes === 1
+      ? 'Only 1 minute remaining!'
+      : `Only ${remainingMinutes} minutes remaining!`;
+
     Alert.alert(
       'Warning!',
-      'Only 5 minutes remaining!',
+      message,
       [{ text: 'OK' }]
     );
   }, []);
