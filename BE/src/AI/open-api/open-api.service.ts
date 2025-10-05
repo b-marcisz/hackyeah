@@ -8,6 +8,10 @@ export class OpenApiService {
   private token: string | null = null;
 
   constructor(private readonly configService: ConfigService) {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    console.log('🔑 OpenAI API Key loaded:', apiKey ? 'YES' : 'NO');
+    console.log('🔑 API Key value:', apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined');
+    
     this.apiClient = axios.create({
       baseURL: this.configService.get<string>('OPEN_API_BASE_URL') ?? 'https://api.openai.com',
       timeout: 30000,

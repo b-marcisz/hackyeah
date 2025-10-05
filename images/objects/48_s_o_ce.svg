@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#45B7D1" rx="10"/>
+  <text x="150" y="120" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Słońce
+  </text>
+  <text x="150" y="150" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">
+    OBJECT
+  </text>
+  <text x="150" y="180" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    #48
+  </text>
+</svg>

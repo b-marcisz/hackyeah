@@ -1,0 +1,264 @@
+
+> assential-project@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m7:48:11 PM[0m] Starting compilation in watch mode...
+
+[[90m7:48:12 PM[0m] Found 0 errors. Watching for file changes.
+
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] AppModule dependencies initialized +8ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+📡 DB CONFIG: {
+  type: 'postgres',
+  host: 'localhost',
+  port: '5455',
+  username: 'postgres',
+  password: 'cardpj',
+  database: 'postgres',
+  entities: [
+    [class NumberAssociation],
+    [class Card],
+    [class Game],
+    [class User],
+    [class Account]
+  ],
+  autoLoadEntities: false,
+  synchronize: true
+}
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmCoreModule dependencies initialized +73ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+NumberAssociationController constructor called
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] CardsModule dependencies initialized +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] OpenApiModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] GamesModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [InstanceLoader] AccountsModule dependencies initialized +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] CardsController {/cards}: +16ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/cards, GET} route +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/cards/:id, GET} route +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/cards, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/cards/:id, PATCH} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/cards/:id, DELETE} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] OpenApiController {/open-api}: +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/open-api, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/open-api, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] NumberAssociationController {/number-associations}: +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-all, POST} route +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/all/primary, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/check-duplicates, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-images, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/with-images, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/generate, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/:number, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/rate, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] ImageGenerationController {/image-generation}: +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/image-generation/generate/:associationId/:type, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/image-generation/generate-all, POST} route +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/image-generation/check/:associationId/:type, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/image-generation/list, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] GamesController {/api/games}: +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/api/games/start, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/api/games/:id, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/api/games/:id/answer, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/api/games/:id/result, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/api/games/:id/feedback, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RoutesResolver] AccountsController {/accounts}: +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName, GET} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName/users, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [RouterExplorer] Mapped {/accounts, POST} route +0ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM     LOG [NestApplication] Nest application successfully started +1ms
+[Nest] 82531  - 10/04/2025, 7:48:13 PM   ERROR [NestApplication] Error: listen EADDRINUSE: address already in use :::4000 +1ms
+node:net:1939
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use :::4000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at ExpressAdapter.listen (/Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/platform-express/adapters/express-adapter.js:108:32)
+    at /Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/core/nest-application.js:183:30
+    at new Promise (<anonymous>)
+    at NestApplication.listen (/Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/core/nest-application.js:173:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async bootstrap (/Users/nikita/projects/hackyeah/BE/src/main.ts:59:3) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 4000
+}
+
+Node.js v23.11.0
+[2J[3J[H[[90m7:49:26 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m7:49:26 PM[0m] Found 0 errors. Watching for file changes.
+
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] AppModule dependencies initialized +8ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+📡 DB CONFIG: {
+  type: 'postgres',
+  host: 'localhost',
+  port: '5455',
+  username: 'postgres',
+  password: 'cardpj',
+  database: 'postgres',
+  entities: [
+    [class NumberAssociation],
+    [class Card],
+    [class Game],
+    [class User],
+    [class Account]
+  ],
+  autoLoadEntities: false,
+  synchronize: true
+}
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmCoreModule dependencies initialized +152ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +1ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+NumberAssociationController constructor called
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] CardsModule dependencies initialized +1ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] OpenApiModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] GamesModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [InstanceLoader] AccountsModule dependencies initialized +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RoutesResolver] CardsController {/cards}: +50ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/cards, GET} route +2ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/cards/:id, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/cards, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/cards/:id, PATCH} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/cards/:id, DELETE} route +1ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RoutesResolver] OpenApiController {/open-api}: +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/open-api, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/open-api, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RoutesResolver] NumberAssociationController {/number-associations}: +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-all, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/all/primary, GET} route +1ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/check-duplicates, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-images, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/with-images, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/generate, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/:number, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/rate, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RoutesResolver] ImageGenerationController {/image-generation}: +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/image-generation/generate/:associationId/:type, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/image-generation/generate-all, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/image-generation/check/:associationId/:type, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/image-generation/list, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RoutesResolver] GamesController {/api/games}: +0ms
+[Nest] 83480  - 10/04/2025, 7:49:27 PM     LOG [RouterExplorer] Mapped {/api/games/start, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/api/games/:id, GET} route +1ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/api/games/:id/answer, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/api/games/:id/result, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/api/games/:id/feedback, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RoutesResolver] AccountsController {/accounts}: +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName, GET} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName/users, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [RouterExplorer] Mapped {/accounts, POST} route +0ms
+[Nest] 83480  - 10/04/2025, 7:49:28 PM     LOG [NestApplication] Nest application successfully started +1ms
+[2J[3J[H[[90m7:49:31 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m7:49:31 PM[0m] Found 0 errors. Watching for file changes.
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [InstanceLoader] AppModule dependencies initialized +9ms
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:31 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+📡 DB CONFIG: {
+  type: 'postgres',
+  host: 'localhost',
+  port: '5455',
+  username: 'postgres',
+  password: 'cardpj',
+  database: 'postgres',
+  entities: [
+    [class NumberAssociation],
+    [class Card],
+    [class Game],
+    [class User],
+    [class Account]
+  ],
+  autoLoadEntities: false,
+  synchronize: true
+}
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] TypeOrmCoreModule dependencies initialized +71ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+NumberAssociationController constructor called
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] CardsModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] OpenApiModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] GamesModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [InstanceLoader] AccountsModule dependencies initialized +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] CardsController {/cards}: +16ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/cards, GET} route +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/cards/:id, GET} route +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/cards, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/cards/:id, PATCH} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/cards/:id, DELETE} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] OpenApiController {/open-api}: +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/open-api, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/open-api, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] NumberAssociationController {/number-associations}: +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-all, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/all/primary, GET} route +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/check-duplicates, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/generate-images, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/with-images, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/generate, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/:number, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/number-associations/:number/rate, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] ImageGenerationController {/image-generation}: +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/image-generation/generate/:associationId/:type, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/image-generation/generate-all, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/image-generation/check/:associationId/:type, GET} route +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/image-generation/list, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] GamesController {/api/games}: +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/api/games/start, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/api/games/:id, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/api/games/:id/answer, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/api/games/:id/result, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/api/games/:id/feedback, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RoutesResolver] AccountsController {/accounts}: +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName, GET} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/accounts/:accountName/users, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [RouterExplorer] Mapped {/accounts, POST} route +0ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM     LOG [NestApplication] Nest application successfully started +1ms
+[Nest] 83575  - 10/04/2025, 7:49:32 PM   ERROR [NestApplication] Error: listen EADDRINUSE: address already in use :::4000 +1ms
+node:net:1939
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use :::4000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at ExpressAdapter.listen (/Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/platform-express/adapters/express-adapter.js:108:32)
+    at /Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/core/nest-application.js:183:30
+    at new Promise (<anonymous>)
+    at NestApplication.listen (/Users/nikita/projects/hackyeah/BE/node_modules/@nestjs/core/nest-application.js:173:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async bootstrap (/Users/nikita/projects/hackyeah/BE/src/main.ts:63:3) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 4000
+}
+
+Node.js v23.11.0

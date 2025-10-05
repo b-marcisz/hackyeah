@@ -35,13 +35,30 @@ export class NumberAssociationService {
     }
   }
 
-  private async generatePrompt(number: number): Promise<string> {
-    return `Wybierz skojarzenie dla liczby ${number} w formacie "Bohater — Działanie — Przedmiot".
-        Wymagania:
-        - Bohater: znana postać (historyczna, mityczna, bajkowa).
-        - Działanie: aktywne, konkretne.
-        - Przedmiot: rozpoznawalny, wizualny.
-        - Skojarzenie powinno metaforycznie przekazywać istotę liczby ${number} (jej formę, sens lub znaczenie kulturowe).
+  private async generatePrompt(number: number, usedHeroes: string[] = [], usedActions: string[] = [], usedObjects: string[] = []): Promise<string> {
+    let restrictions = '';
+    
+    if (usedHeroes.length > 0) {
+      restrictions += `\nNIE UŻYWAJ tych bohaterów (już używane): ${usedHeroes.join(', ')}`;
+    }
+    
+    if (usedActions.length > 0) {
+      restrictions += `\nNIE UŻYWAJ tych działań (już używane): ${usedActions.join(', ')}`;
+    }
+    
+    if (usedObjects.length > 0) {
+      restrictions += `\nNIE UŻYWAJ tych przedmiotów (już używane): ${usedObjects.join(', ')}`;
+    }
+
+    return `Stwórz proste i łatwe do zapamiętania skojarzenie dla liczby ${number} dla dzieci w wieku 6-12 lat w formacie "Bohater — Działanie — Przedmiot".
+        Wymagania dla dzieci:
+        - Bohater: znana postać z bajek, kreskówek, gier lub prostych historii (np. Królewna Śnieżka, Batman, Elsa, Spiderman, Myszka Miki)
+        - Działanie: proste, aktywne, łatwe do wyobrażenia (np. je, śpi, biega, śpiewa, tańczy, rysuje)
+        - Przedmiot: codzienny, rozpoznawalny, wizualny (np. jabłko, kredka, piłka, książka, lody)
+        - Skojarzenie powinno być zabawne, kolorowe i łatwe do zapamiętania
+        - Powinno wizualnie przypominać kształt liczby ${number} lub być z nią związane
+        - Użyj prostych słów, które dzieci znają
+        ${restrictions}
         - Odpowiedź ściśle w JSON:
         {
             "hero": "...",
@@ -57,7 +74,7 @@ export class NumberAssociationService {
       messages: [
         {
           role: 'system',
-          content: 'You are a creative assistant that generates number associations. Respond only with valid JSON, without markdown or formatting.',
+          content: 'You are a creative assistant that generates simple, memorable number associations for children aged 6-12. Create fun, colorful associations using familiar characters from cartoons, movies, and stories. Use simple words and actions that children can easily understand and remember. Respond only with valid JSON, without markdown or formatting.',
         },
         {
           role: 'user',
@@ -76,31 +93,92 @@ export class NumberAssociationService {
   }
 
   async generateAssociation(number: number): Promise<NumberAssociation> {
-    try {
-      const prompt = await this.generatePrompt(number);
-      const content = await this.callOpenAI(prompt);
-      
-      this.logger.debug('Generated association content:', content);
+    const maxAttempts = 5;
+    let attempts = 0;
 
-      await this.numberAssociationRepository.update(
-        { number },
-        { is_primary: false }
-      );
+    // Get all existing values from database at the start
+    const existingAssociations = await this.numberAssociationRepository.find({
+      select: ['hero', 'action', 'object']
+    });
 
-      const association = this.numberAssociationRepository.create({
-        number,
-        ...content,
-        is_primary: true,
-      });
+    const usedHeroes = existingAssociations.map(a => a.hero).filter(Boolean);
+    const usedActions = existingAssociations.map(a => a.action).filter(Boolean);
+    const usedObjects = existingAssociations.map(a => a.object).filter(Boolean);
 
-      const saved = await this.numberAssociationRepository.save(association);
-      this.logger.log(`Created new association for number ${number}`);
+    this.logger.log(`🔍 Found ${usedHeroes.length} existing heroes, ${usedActions.length} actions, ${usedObjects.length} objects in database`);
 
-      return saved;
-    } catch (error) {
-      this.logger.error(`Failed to generate association for number ${number}:`, error);
-      throw new Error(`Failed to generate association: ${error.message}`);
+    while (attempts < maxAttempts) {
+      try {
+        const prompt = await this.generatePrompt(number, usedHeroes, usedActions, usedObjects);
+        const content = await this.callOpenAI(prompt);
+        
+        this.logger.debug('Generated association content:', content);
+
+        // Check for duplicates before saving
+        const existingHero = await this.numberAssociationRepository.findOne({
+          where: { hero: content.hero }
+        });
+        
+        const existingAction = await this.numberAssociationRepository.findOne({
+          where: { action: content.action }
+        });
+        
+        const existingObject = await this.numberAssociationRepository.findOne({
+          where: { object: content.object }
+        });
+
+        if (existingHero || existingAction || existingObject) {
+          this.logger.warn(`❌ Duplicate found for number ${number}, attempt ${attempts + 1}:`);
+          if (existingHero) {
+            this.logger.warn(`   Hero "${content.hero}" already exists (ID: ${existingHero.id})`);
+            usedHeroes.push(content.hero);
+          }
+          if (existingAction) {
+            this.logger.warn(`   Action "${content.action}" already exists (ID: ${existingAction.id})`);
+            usedActions.push(content.action);
+          }
+          if (existingObject) {
+            this.logger.warn(`   Object "${content.object}" already exists (ID: ${existingObject.id})`);
+            usedObjects.push(content.object);
+          }
+          
+          attempts++;
+          continue;
+        }
+
+        await this.numberAssociationRepository.update(
+          { number },
+          { is_primary: false }
+        );
+
+        const association = this.numberAssociationRepository.create({
+          number,
+          ...content,
+          is_primary: true,
+        });
+
+        const saved = await this.numberAssociationRepository.save(association);
+        this.logger.log(`✅ Created new association for number ${number} after ${attempts + 1} attempts:`);
+        this.logger.log(`   Hero: "${saved.hero}"`);
+        this.logger.log(`   Action: "${saved.action}"`);
+        this.logger.log(`   Object: "${saved.object}"`);
+        this.logger.log(`   Explanation: "${saved.explanation}"`);
+        this.logger.log(`   ID: ${saved.id}`);
+
+        return saved;
+      } catch (error) {
+        if (error.code === '23505') { // Unique constraint violation
+          this.logger.warn(`Unique constraint violation for number ${number}, attempt ${attempts + 1}`);
+          attempts++;
+          continue;
+        }
+        
+        this.logger.error(`Failed to generate association for number ${number}:`, error);
+        throw new Error(`Failed to generate association: ${error.message}`);
+      }
     }
+
+    throw new Error(`Failed to generate unique association for number ${number} after ${maxAttempts} attempts`);
   }
 
   async getAssociation(number: number): Promise<NumberAssociation | null> {
@@ -109,9 +187,9 @@ export class NumberAssociationService {
     });
   }
 
-  async updateRating(id: number, rating: number): Promise<NumberAssociation> {
+  async updateRating(number: number, rating: number): Promise<NumberAssociation> {
     const association = await this.numberAssociationRepository.findOne({
-      where: { id },
+      where: { number },
     });
 
     if (!association) {
@@ -128,7 +206,7 @@ export class NumberAssociationService {
   }
 
   async generateAllAssociations(): Promise<number> {
-    this.logger.log('Starting generation of next 10 associations');
+    this.logger.log('Starting generation of next 30 associations (or until number 99)');
     
     // Сначала получаем все существующие числа в базе данных
     const existingNumbers = await this.numberAssociationRepository
@@ -140,13 +218,14 @@ export class NumberAssociationService {
 
     const existingNumberSet = new Set(existingNumbers.map(item => item.number));
     this.logger.log(`Found ${existingNumberSet.size} existing associations in database`);
+    this.logger.log(`Existing numbers: ${Array.from(existingNumberSet).sort((a, b) => a - b).join(', ')}`);
     
     let successCount = 0;
     let skippedCount = 0;
     const errors: string[] = [];
-    const maxToGenerate = 10; // Generate only next 10 numbers
+    const maxToGenerate = 30; // Generate up to 30 numbers
 
-    // Find the next 10 numbers that don't have associations
+    // Find the next 30 numbers that don't have associations (or until 99)
     const numbersToGenerate: number[] = [];
     for (let number = 0; number <= 99 && numbersToGenerate.length < maxToGenerate; number++) {
       if (!existingNumberSet.has(number)) {
@@ -155,12 +234,14 @@ export class NumberAssociationService {
     }
 
     this.logger.log(`Will generate associations for numbers: ${numbersToGenerate.join(', ')}`);
+    this.logger.log(`Numbers to generate count: ${numbersToGenerate.length}`);
 
     for (const number of numbersToGenerate) {
       try {
+        this.logger.log(`Generating association for number ${number}...`);
         await this.generateAssociation(number);
         successCount++;
-        this.logger.debug(`Generated association for number ${number}`);
+        this.logger.log(`Successfully generated association for number ${number}`);
         
         // Небольшая задержка между запросами к API
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -181,11 +262,20 @@ export class NumberAssociationService {
   }
 
   async getAllPrimaryAssociations(): Promise<Partial<NumberAssociation>[]> {
-    return this.numberAssociationRepository.find({
-      where: { is_primary: true },
-      order: { number: 'ASC' },
-      select: ['number', 'hero', 'action', 'object'],
-    });
+    console.log('Getting all primary associations...');
+    try {
+      const result = await this.numberAssociationRepository.find({
+        where: { is_primary: true },
+        order: { number: 'ASC' },
+        select: ['number', 'hero', 'action', 'object'],
+      });
+      console.log('Found associations:', result.length);
+      console.log('First association:', result[0]);
+      return result;
+    } catch (error) {
+      console.error('Error in getAllPrimaryAssociations:', error);
+      throw error;
+    }
   }
 
   async checkAndRegenerateDuplicates(): Promise<{
