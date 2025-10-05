@@ -83,6 +83,18 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
 
       console.log(`Successfully updated timeLimit to ${minutes} for profile ${profileId}`);
 
+      // Reset any extended minutes for today's session
+      try {
+        const todaySession = await accountsService.getTodaySession(accountName, profileId);
+        if (todaySession && todaySession.extendedMinutes > 0) {
+          await accountsService.resetSessionExtension(todaySession.id);
+          console.log(`Reset extendedMinutes for profile ${profileId} session ${todaySession.id}`);
+        }
+      } catch (sessionError) {
+        console.error('Error resetting session extension:', sessionError);
+        // Don't fail the whole operation if session reset fails
+      }
+
       // Don't refresh immediately - the local state is already updated
       // Profile data will be refreshed when user navigates away and back
     } catch (error) {

@@ -128,4 +128,13 @@ export const accountsService = {
     const response = await apiClient.post<UserSessionDto>(`/accounts/sessions/${sessionId}/extend`, { additionalMinutes });
     return response.data;
   },
+
+  /**
+   * Reset session extension (set extendedMinutes to 0)
+   * PATCH /accounts/sessions/{sessionId}
+   */
+  resetSessionExtension: async (sessionId: string): Promise<UserSessionDto> => {
+    const response = await apiClient.patch<UserSessionDto>(`/accounts/sessions/${sessionId}`, { extendedMinutes: 0 });
+    return response.data;
+  },
 };
