@@ -10,6 +10,7 @@ export default function SplashScreen({ onContinue }: SplashScreenProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // Pulsing animation for the icon
   useEffect(() => {
@@ -30,6 +31,31 @@ export default function SplashScreen({ onContinue }: SplashScreenProps) {
     pulse.start();
     return () => pulse.stop();
   }, [fadeAnim]);
+
+  // Strong swaying animation for the hand
+  useEffect(() => {
+    const sway = Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: -1,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    sway.start();
+    return () => sway.stop();
+  }, [rotateAnim]);
 
   // Gamepad support (web only)
   useEffect(() => {
@@ -85,8 +111,19 @@ export default function SplashScreen({ onContinue }: SplashScreenProps) {
         resizeMode={isLandscape ? "cover" : "contain"}
       />
 
-      {/* Pulsing touch indicator */}
-      <Animated.View style={[styles.touchIndicator, { opacity: fadeAnim }]}>
+      {/* Pulsing and swaying touch indicator */}
+      <Animated.View style={[
+        styles.touchIndicator,
+        {
+          opacity: fadeAnim,
+          transform: [{
+            rotate: rotateAnim.interpolate({
+              inputRange: [-1, 1],
+              outputRange: ['-20deg', '20deg'], // Strong sway: -20° to +20°
+            })
+          }]
+        }
+      ]}>
         <FontAwesome name="hand-pointer-o" size={48} color="#fff" />
       </Animated.View>
     </TouchableOpacity>
