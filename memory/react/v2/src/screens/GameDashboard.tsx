@@ -27,8 +27,8 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
   // Session management callbacks (memoized to prevent re-renders)
   const handleTimeWarning = useCallback(() => {
     Alert.alert(
-      'Uwaga!',
-      'Pozostało tylko 5 minut czasu gry!',
+      'Warning!',
+      'Only 5 minutes remaining!',
       [{ text: 'OK' }]
     );
   }, []);

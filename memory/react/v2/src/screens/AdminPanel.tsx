@@ -203,7 +203,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
             color={activeTab === 'settings' ? '#fff' : 'rgba(255, 255, 255, 0.5)'}
           />
           <Text style={[styles.tabText, activeTab === 'settings' && styles.tabTextActive]}>
-            Ustawienia
+            Settings
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -217,7 +217,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
             color={activeTab === 'add-profile' ? '#fff' : 'rgba(255, 255, 255, 0.5)'}
           />
           <Text style={[styles.tabText, activeTab === 'add-profile' && styles.tabTextActive]}>
-            Dodaj profil
+            Add Profile
           </Text>
         </TouchableOpacity>
       </View>
@@ -292,7 +292,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
                   <View style={styles.infoBox}>
                     <FontAwesome name="info-circle" size={16} color="#4FACFE" />
                     <Text style={styles.infoText}>
-                      Dziecko będzie mogło grać maksymalnie {limit.maxMinutesPerDay} minut dziennie
+                      Child will be able to play maximum {limit.maxMinutesPerDay} minutes daily
                     </Text>
                   </View>
 
@@ -303,7 +303,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
                     activeOpacity={0.7}
                   >
                     <FontAwesome name="trash" size={18} color="#FF6B6B" />
-                    <Text style={styles.deleteProfileText}>Usuń profil</Text>
+                    <Text style={styles.deleteProfileText}>Delete Profile</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -314,7 +314,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
         {activeTab === 'settings' && (
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              💡 Ustawienia są zapisywane automatycznie
+              💡 Settings are saved automatically
             </Text>
           </View>
         )}
@@ -322,22 +322,22 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
         {/* Add Profile Tab */}
         {activeTab === 'add-profile' && (
           <View style={styles.addProfileContainer}>
-            <Text style={styles.sectionTitle}>Nowy profil dziecka</Text>
+            <Text style={styles.sectionTitle}>New Child Profile</Text>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Imię dziecka</Text>
+              <Text style={styles.label}>Child's Name</Text>
               <TextInput
                 style={styles.input}
                 value={newProfileName}
                 onChangeText={setNewProfileName}
-                placeholder="Wpisz imię..."
+                placeholder="Enter name..."
                 placeholderTextColor="rgba(255, 255, 255, 0.3)"
                 maxLength={20}
               />
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Wybierz kolor</Text>
+              <Text style={styles.label}>Choose Color</Text>
               <View style={styles.colorPicker}>
                 {profileColors.map((color) => (
                   <TouchableOpacity
@@ -359,7 +359,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
             </View>
 
             <View style={styles.previewSection}>
-              <Text style={styles.label}>Podgląd</Text>
+              <Text style={styles.label}>Preview</Text>
               <View style={styles.previewCard}>
                 <View
                   style={[
@@ -372,7 +372,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
                   </Text>
                 </View>
                 <Text style={styles.previewName}>
-                  {newProfileName || 'Brak imienia'}
+                  {newProfileName || 'No name'}
                 </Text>
               </View>
             </View>
@@ -388,7 +388,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
             >
               <FontAwesome name="plus-circle" size={24} color="#fff" />
               <Text style={styles.addButtonText}>
-                {isAddingProfile ? 'Dodawanie...' : 'Dodaj profil'}
+                {isAddingProfile ? 'Adding...' : 'Add Profile'}
               </Text>
             </TouchableOpacity>
           </View>

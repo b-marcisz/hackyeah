@@ -99,7 +99,7 @@ export default function AccountSetup({ onAccountCreated, onHaveAccount }: Accoun
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Potwierdź PIN</Text>
+            <Text style={styles.label}>Confirm PIN</Text>
             <TextInput
               style={styles.input}
               value={confirmPin}
