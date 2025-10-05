@@ -30,7 +30,6 @@ async function bootstrap() {
     origin: true, // Allow all origins for mobile access
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
   });
 
   app.useGlobalPipes(

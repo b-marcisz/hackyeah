@@ -43,6 +43,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
 
   // Update time limits when profiles change
   useEffect(() => {
+    console.log('Profiles changed, updating timeLimits:', profiles.map(p => ({ id: p.id, name: p.name, timeLimit: p.settings?.timeLimit })));
     setTimeLimits(
       profiles.map(p => ({
         profileId: p.id,
@@ -65,7 +66,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
   };
 
   const updateTimeLimit = async (profileId: string, minutes: number) => {
-    // Update local state
+    // Update local state immediately
     setTimeLimits(prev => prev.map(limit =>
       limit.profileId === profileId
         ? { ...limit, maxMinutesPerDay: minutes }
@@ -82,13 +83,18 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
 
       console.log(`Successfully updated timeLimit to ${minutes} for profile ${profileId}`);
 
-      // Refresh profiles to get latest data
-      if (onProfileAdded) {
-        onProfileAdded();
-      }
+      // Don't refresh immediately - the local state is already updated
+      // Profile data will be refreshed when user navigates away and back
     } catch (error) {
       console.error('Error updating time limit:', error);
       Alert.alert('Error', 'Failed to update time limit');
+
+      // Revert local state on error
+      setTimeLimits(prev => prev.map(limit =>
+        limit.profileId === profileId
+          ? { ...limit, maxMinutesPerDay: limit.maxMinutesPerDay }
+          : limit
+      ));
     }
   };
 
@@ -142,7 +148,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
     setIsAddingProfile(true);
     try {
       // Add user to account
-      await accountsService.addUser(accountName, {
+      const result = await accountsService.addUser(accountName, {
         name: newProfileName.trim(),
         role: UserRole.USER,
         color: colorHexToEnum[selectedColor],
@@ -150,6 +156,8 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
           timeLimit: 30, // Default 30 minutes
         },
       }, pin);
+
+      console.log('Profile added, API response:', result);
 
       Alert.alert('Success', `Profile "${newProfileName}" added successfully!`);
 
@@ -166,6 +174,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
       setActiveTab('settings');
     } catch (error: any) {
       console.error('Error adding profile:', error);
+      console.error('Error response:', error.response?.data);
       Alert.alert('Error', error.response?.data?.message || 'Failed to add profile. Please try again.');
     } finally {
       setIsAddingProfile(false);

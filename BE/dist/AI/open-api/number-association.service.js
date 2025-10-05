@@ -12,7 +12,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var NumberAssociationService_1;
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NumberAssociationService = void 0;
 const common_1 = require("@nestjs/common");
@@ -330,6 +329,7 @@ exports.NumberAssociationService = NumberAssociationService;
 exports.NumberAssociationService = NumberAssociationService = NumberAssociationService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(1, (0, typeorm_1.InjectRepository)(number_association_entity_1.NumberAssociation)),
-    __metadata("design:paramtypes", [open_api_service_1.OpenApiService, typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [open_api_service_1.OpenApiService,
+        typeorm_2.Repository])
 ], NumberAssociationService);
 //# sourceMappingURL=number-association.service.js.map

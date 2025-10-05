@@ -5,7 +5,8 @@
 // Physical device: 'http://YOUR_COMPUTER_IP:4000'
 
 // Using local network IP for React Native Expo
-const API_BASE_URL = 'http://10.250.162.171:4000';
+const API_BASE_URL = 'http://192.168.0.76:4000';
+// const API_BASE_URL = 'http://10.250.162.171:4000';
 
 export const API_CONFIG = {
   baseURL: API_BASE_URL,

@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g, _h;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NumberAssociationController = void 0;
 const common_1 = require("@nestjs/common");
@@ -164,45 +163,45 @@ __decorate([
     (0, common_1.Post)('generate-all'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_a = typeof Promise !== "undefined" && Promise) === "function" ? _a : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "generateAllAssociations", null);
 __decorate([
     (0, common_1.Get)('all/primary'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "getAllPrimaryAssociations", null);
 __decorate([
     (0, common_1.Post)('check-duplicates'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "checkAndRegenerateDuplicates", null);
 __decorate([
     (0, common_1.Post)('generate-images'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "generateAllImages", null);
 __decorate([
     (0, common_1.Get)('with-images'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "getAssociationsWithImages", null);
 __decorate([
     (0, common_1.Post)(':number/generate'),
     __param(0, (0, common_1.Param)('number')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "generateAssociation", null);
 __decorate([
     (0, common_1.Get)(':number'),
     __param(0, (0, common_1.Param)('number')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "getAssociation", null);
 __decorate([
     (0, common_1.Post)(':number/rate'),
@@ -210,7 +209,7 @@ __decorate([
     __param(1, (0, common_1.Body)('rating')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Number]),
-    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+    __metadata("design:returntype", Promise)
 ], NumberAssociationController.prototype, "rateAssociation", null);
 exports.NumberAssociationController = NumberAssociationController = __decorate([
     (0, common_1.Controller)('number-associations'),
