@@ -10,7 +10,11 @@ import { Card } from './cards/card.entity';
 import { AccountsModule } from './accounts/accounts.module';
 import { Account } from './accounts/entities/account.entity';
 import { User } from './accounts/entities/user.entity';
+<<<<<<< HEAD
 import { UserSession } from './accounts/entities/session.entity';
+=======
+import { UserProgress } from './entities/user-progress.entity';
+>>>>>>> e2d37e6b (update)
 
 @Module({
   imports: [
@@ -30,7 +34,11 @@ import { UserSession } from './accounts/entities/session.entity';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
+<<<<<<< HEAD
           entities: [NumberAssociation, Card, Game, User, Account, UserSession],
+=======
+          entities: [NumberAssociation, Card, Game, User, Account, UserProgress],
+>>>>>>> e2d37e6b (update)
           autoLoadEntities: false,
           synchronize: true
         } as any;

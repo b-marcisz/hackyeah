@@ -35,4 +35,21 @@ export class OpenApiController {
     }
     return this.openApiService.post('/', data);
   }
+
+  @Get('user-progress')
+  @ApiOperation({ summary: 'Get user progress stats' })
+  @ApiResponse({ status: 200, description: 'User progress retrieved successfully' })
+  async getUserProgress() {
+    // Возвращаем тестовые данные для Dashboard
+    return {
+      currentProgress: 25,
+      currentPool: 0,
+      completedNumbers: [1, 2],
+      failedAttempts: [3],
+      totalCorrectAnswers: 8,
+      totalIncorrectAnswers: 2,
+      studyTimeSpent: 120,
+      testTimeSpent: 180
+    };
+  }
 } 

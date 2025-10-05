@@ -63,11 +63,15 @@ CREATE INDEX IF NOT EXISTS idx_games_status ON games(status);
 CREATE INDEX IF NOT EXISTS idx_games_player_id ON games(player_id);
 CREATE INDEX IF NOT EXISTS idx_cards_category ON cards(category);
 
--- Insert some sample data
 INSERT INTO number_associations (number, hero, action, object, explanation, is_primary, rating, total_votes) VALUES
-(0, 'Zero', 'stands', 'ground', 'Zero stands on the ground - the foundation of everything', true, 4.5, 10),
-(1, 'One', 'points', 'sky', 'One points to the sky - the first direction', true, 4.2, 8),
-(2, 'Two', 'dances', 'floor', 'Two dances on the floor - a pair in motion', true, 4.0, 6),
-(3, 'Three', 'jumps', 'chair', 'Three jumps on the chair - a trio of energy', true, 4.3, 7),
-(4, 'Four', 'sits', 'table', 'Four sits at the table - a quartet at rest', true, 4.1, 5)
+(0, 'Mickey Mouse', 'peeks through', 'giant donut', 'Mickey Mouse peeks through a giant donut that looks like the round number 0.', true, 0, 0),
+(1, 'Rapunzel', 'holds', 'tall paintbrush', 'Rapunzel holds a tall paintbrush standing straight like the number 1.', true, 0, 0),
+(2, 'Peppa Pig', 'hugs', 'banana', 'Peppa Pig hugs a yellow banana curved just like the number 2.', true, 0, 0),
+(3, 'Spider-Man', 'twirls', 'garden hose', 'Spider-Man twirls a green garden hose that curls into the shape of the number 3.', true, 0, 0),
+(4, 'Woody', 'leans on', 'sturdy chair', 'Woody leans on a sturdy chair and together they make the sharp corners of the number 4.', true, 0, 0),
+(5, 'Elsa', 'draws sparkles on', 'candy cane', 'Elsa draws sparkles on a candy cane that bends like the number 5.', true, 0, 0),
+(6, 'Lightning McQueen', 'drives around', 'big tire', 'Lightning McQueen drives around a big tire that loops like the number 6.', true, 0, 0),
+(7, 'Batman', 'balances', 'umbrella', 'Batman balances an umbrella tilted to look like the top bar of the number 7.', true, 0, 0),
+(8, 'Olaf', 'juggles', 'pair of snowballs', 'Olaf juggles a pair of snowballs stacked like the snowman shape of the number 8.', true, 0, 0),
+(9, 'Moana', 'spins', 'balloon string', 'Moana spins a bright balloon string that curls down like the tail of the number 9.', true, 0, 0)
 ON CONFLICT DO NOTHING;
