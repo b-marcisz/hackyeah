@@ -1,7 +1,8 @@
 # hackyeah
 
 ## How to start
-````
+
+```
 cd BE
 npm start
 ```
