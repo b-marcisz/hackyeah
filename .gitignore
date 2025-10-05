@@ -14,6 +14,7 @@ build/
 .env.test.local
 .env.production.local
 BE/.env
+BE/.env.backup
 
 # Logs
 npm-debug.log*
