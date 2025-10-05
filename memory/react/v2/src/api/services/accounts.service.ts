@@ -119,4 +119,13 @@ export const accountsService = {
     const response = await apiClient.patch<UserSessionDto>(`/accounts/sessions/${sessionId}`, { totalMinutes });
     return response.data;
   },
+
+  /**
+   * Extend session time (subtract minutes from totalMinutes)
+   * POST /accounts/sessions/{sessionId}/extend
+   */
+  extendSessionTime: async (sessionId: string, additionalMinutes: number): Promise<UserSessionDto> => {
+    const response = await apiClient.post<UserSessionDto>(`/accounts/sessions/${sessionId}/extend`, { additionalMinutes });
+    return response.data;
+  },
 };

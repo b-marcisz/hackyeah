@@ -7,15 +7,17 @@ import { accountsService } from '../api';
 interface TimeLimitReachedProps {
   profile: Profile;
   accountName: string;
+  sessionId: string;
   onBackToProfiles: () => void;
   onExtendTime: () => void;
 }
 
-export default function TimeLimitReached({ profile, accountName, onBackToProfiles, onExtendTime }: TimeLimitReachedProps) {
+export default function TimeLimitReached({ profile, accountName, sessionId, onBackToProfiles, onExtendTime }: TimeLimitReachedProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [countdown, setCountdown] = useState(10);
   const [showPinInput, setShowPinInput] = useState(false);
+  const [selectedMinutes, setSelectedMinutes] = useState<number | null>(null);
   const [pin, setPin] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
@@ -39,7 +41,12 @@ export default function TimeLimitReached({ profile, accountName, onBackToProfile
 
   const handleVerifyPin = async () => {
     if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-      Alert.alert('Błąd', 'PIN musi składać się z 4 cyfr');
+      Alert.alert('Error', 'PIN must be 4 digits');
+      return;
+    }
+
+    if (!selectedMinutes) {
+      Alert.alert('Error', 'Please select time duration');
       return;
     }
 
@@ -48,16 +55,19 @@ export default function TimeLimitReached({ profile, accountName, onBackToProfile
       const isValid = await accountsService.verifyPin(accountName, pin);
 
       if (isValid) {
-        Alert.alert('Sukces', 'Czas przedłużony!', [
+        // Extend the session time by calling the backend
+        await accountsService.extendSessionTime(sessionId, selectedMinutes);
+
+        Alert.alert('Success', `Time extended by ${selectedMinutes} minutes!`, [
           { text: 'OK', onPress: onExtendTime }
         ]);
       } else {
-        Alert.alert('Błąd', 'Nieprawidłowy PIN');
+        Alert.alert('Error', 'Invalid PIN');
         setPin('');
       }
     } catch (error) {
       console.error('Error verifying PIN:', error);
-      Alert.alert('Błąd', 'Nie udało się zweryfikować PIN');
+      Alert.alert('Error', 'Failed to extend time');
     } finally {
       setIsVerifying(false);
     }
@@ -65,45 +75,42 @@ export default function TimeLimitReached({ profile, accountName, onBackToProfile
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {/* Icon */}
-        <View style={styles.iconContainer}>
-          <FontAwesome name="clock-o" size={isLandscape ? 80 : 100} color="#FF6B9D" />
-        </View>
-
-        {/* Message */}
-        <Text style={[styles.title, isLandscape && styles.titleLandscape]}>
-          Czas gry się skończył!
-        </Text>
-
-        <View style={styles.messageBox}>
-          <Text style={[styles.message, isLandscape && styles.messageLandscape]}>
-            {profile.name}, wykorzystałeś cały czas na dzisiaj.
-          </Text>
-          <Text style={[styles.message, isLandscape && styles.messageLandscape]}>
-            Wróć jutro! 😊
-          </Text>
-        </View>
-
+      <View style={[styles.content, isLandscape && styles.contentLandscape]}>
         {!showPinInput ? (
           <>
-            {/* Countdown */}
-            <View style={styles.countdownContainer}>
-              <Text style={[styles.countdownText, isLandscape && styles.countdownTextLandscape]}>
-                Powrót za {countdown}...
-              </Text>
+            <View style={styles.mainContent}>
+              {/* Icon */}
+              <View style={styles.iconContainer}>
+                <FontAwesome name="clock-o" size={isLandscape ? 80 : 100} color="#FF6B9D" />
+              </View>
+
+              {/* Message */}
+              <View style={[styles.messageBox, isLandscape && styles.messageBoxLandscape]}>
+                <Text style={[styles.message, isLandscape && styles.messageLandscape]}>
+                  {profile.name}, you've used all your time for today.
+                </Text>
+                <Text style={[styles.message, isLandscape && styles.messageLandscape]}>
+                  Come back tomorrow! 😊
+                </Text>
+              </View>
+
+              <View style={styles.countdownContainer}>
+                <Text style={[styles.countdownText, isLandscape && styles.countdownTextLandscape]}>
+                  Returning in {countdown}...
+                </Text>
+              </View>
             </View>
 
-            {/* Buttons */}
-            <View style={styles.buttonsContainer}>
+            {/* Buttons - vertical on landscape */}
+            <View style={[styles.buttonsContainer, isLandscape && styles.buttonsContainerLandscape]}>
               <TouchableOpacity
                 style={[styles.button, styles.extendButton, isLandscape && styles.buttonLandscape]}
                 onPress={handleExtendTime}
                 activeOpacity={0.7}
               >
-                <FontAwesome name="clock-o" size={isLandscape ? 20 : 24} color="#fff" />
+                <FontAwesome name="clock-o" size={isLandscape ? 18 : 24} color="#fff" />
                 <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
-                  Przedłuż czas
+                  {isLandscape ? 'Expand' : 'Extend'}
                 </Text>
               </TouchableOpacity>
 
@@ -112,9 +119,9 @@ export default function TimeLimitReached({ profile, accountName, onBackToProfile
                 onPress={onBackToProfiles}
                 activeOpacity={0.7}
               >
-                <FontAwesome name="arrow-left" size={isLandscape ? 20 : 24} color="#fff" />
+                <FontAwesome name="arrow-left" size={isLandscape ? 18 : 24} color="#fff" />
                 <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
-                  Wyjdź
+                  Exit
                 </Text>
               </TouchableOpacity>
             </View>
@@ -122,44 +129,67 @@ export default function TimeLimitReached({ profile, accountName, onBackToProfile
         ) : (
           <>
             {/* PIN Input */}
-            <View style={styles.pinContainer}>
-              <Text style={styles.pinLabel}>Wpisz PIN rodzica:</Text>
-              <TextInput
-                style={styles.pinInput}
-                value={pin}
-                onChangeText={setPin}
-                placeholder="••••"
-                placeholderTextColor="rgba(255, 255, 255, 0.3)"
-                keyboardType="number-pad"
-                maxLength={4}
-                secureTextEntry
-                editable={!isVerifying}
-                autoFocus
-              />
+            <View style={[styles.pinMainContent, isLandscape && styles.pinMainContentLandscape]}>
+              <View style={styles.pinContainer}>
+                {/* Time selection buttons */}
+                <View style={styles.timeSelectionContainer}>
+                  {[5, 10, 15].map((minutes) => (
+                    <TouchableOpacity
+                      key={minutes}
+                      style={[
+                        styles.timeButton,
+                        selectedMinutes === minutes && styles.timeButtonSelected
+                      ]}
+                      onPress={() => setSelectedMinutes(minutes)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={[
+                        styles.timeButtonText,
+                        selectedMinutes === minutes && styles.timeButtonTextSelected
+                      ]}>
+                        {minutes} min
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <TextInput
+                  style={[styles.pinInput, isLandscape && styles.pinInputLandscape]}
+                  value={pin}
+                  onChangeText={setPin}
+                  placeholder="••••"
+                  placeholderTextColor="rgba(255, 255, 255, 0.3)"
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  secureTextEntry
+                  editable={!isVerifying}
+                  autoFocus
+                />
+              </View>
             </View>
 
-            <View style={styles.buttonsContainer}>
+            <View style={[styles.buttonsContainer, isLandscape && styles.buttonsContainerLandscape]}>
               <TouchableOpacity
-                style={[styles.button, styles.confirmButton, isLandscape && styles.buttonLandscape, isVerifying && styles.buttonDisabled]}
+                style={[styles.button, styles.confirmButton, isLandscape && styles.buttonLandscape, (isVerifying || pin.length !== 4 || !selectedMinutes) && styles.buttonDisabled]}
                 onPress={handleVerifyPin}
-                disabled={isVerifying || pin.length !== 4}
+                disabled={isVerifying || pin.length !== 4 || !selectedMinutes}
                 activeOpacity={0.7}
               >
-                <FontAwesome name="check" size={isLandscape ? 20 : 24} color="#fff" />
+                <FontAwesome name="check" size={24} color="#fff" />
                 <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
-                  {isVerifying ? 'Sprawdzam...' : 'Potwierdź'}
+                  {isVerifying ? 'Checking...' : 'Confirm'}
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.button, isLandscape && styles.buttonLandscape]}
-                onPress={() => { setShowPinInput(false); setPin(''); }}
+                onPress={() => { setShowPinInput(false); setPin(''); setSelectedMinutes(null); }}
                 activeOpacity={0.7}
                 disabled={isVerifying}
               >
-                <FontAwesome name="times" size={isLandscape ? 20 : 24} color="#fff" />
+                <FontAwesome name="times" size={24} color="#fff" />
                 <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
-                  Anuluj
+                  Cancel
                 </Text>
               </TouchableOpacity>
             </View>
@@ -182,6 +212,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxWidth: 500,
   },
+  contentLandscape: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 40,
+    maxWidth: 800,
+  },
+  mainContent: {
+    alignItems: 'center',
+    flex: 1,
+  },
   iconContainer: {
     width: 140,
     height: 140,
@@ -199,8 +240,8 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   titleLandscape: {
-    fontSize: 28,
-    marginBottom: 20,
+    fontSize: 24,
+    marginBottom: 15,
   },
   messageBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -210,6 +251,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
   },
+  messageBoxLandscape: {
+    padding: 15,
+    marginBottom: 20,
+  },
   message: {
     fontSize: 20,
     color: 'rgba(255, 255, 255, 0.9)',
@@ -217,8 +262,8 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   messageLandscape: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
   },
   countdownContainer: {
     marginBottom: 25,
@@ -246,8 +291,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonLandscape: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    gap: 12,
   },
   buttonText: {
     fontSize: 18,
@@ -255,12 +301,18 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   buttonTextLandscape: {
-    fontSize: 16,
+    fontSize: 18,
   },
   buttonsContainer: {
     flexDirection: 'row',
     gap: 15,
     width: '100%',
+    justifyContent: 'center',
+  },
+  buttonsContainerLandscape: {
+    flexDirection: 'column',
+    gap: 15,
+    width: 'auto',
     justifyContent: 'center',
   },
   extendButton: {
@@ -272,9 +324,16 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.5,
   },
+  pinMainContent: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  pinMainContentLandscape: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   pinContainer: {
     width: '100%',
-    marginBottom: 25,
     alignItems: 'center',
   },
   pinLabel: {
@@ -282,6 +341,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 12,
+  },
+  pinLabelLandscape: {
+    fontSize: 14,
+    marginBottom: 8,
   },
   pinInput: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -295,5 +358,39 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 8,
     width: 150,
+  },
+  pinInputLandscape: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    fontSize: 20,
+    width: 130,
+  },
+  timeSelectionContainer: {
+    flexDirection: 'column',
+    gap: 15,
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  timeButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    minWidth: 120,
+    alignItems: 'center',
+  },
+  timeButtonSelected: {
+    backgroundColor: '#4FACFE',
+    borderColor: '#4FACFE',
+  },
+  timeButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)',
+  },
+  timeButtonTextSelected: {
+    color: '#fff',
   },
 });

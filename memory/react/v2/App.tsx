@@ -21,6 +21,7 @@ export default function App() {
   const [adminTab, setAdminTab] = useState<'settings' | 'add-profile'>('settings');
   const [verifiedPin, setVerifiedPin] = useState<string | null>(null);
   const [accountName, setAccountName] = useState<string>(''); // Will be loaded from storage or set during login/registration
+  const [sessionId, setSessionId] = useState<string | null>(null); // Store session ID for extending time
 
   // Fetch profiles from API
   const { profiles, refreshProfiles } = useProfiles(accountName);
@@ -116,7 +117,8 @@ export default function App() {
     setCurrentScreen('profile-selection');
   };
 
-  const handleTimeLimitReached = () => {
+  const handleTimeLimitReached = (currentSessionId: string) => {
+    setSessionId(currentSessionId);
     setCurrentScreen('time-limit-reached');
   };
 
@@ -189,10 +191,11 @@ export default function App() {
           />
         );
       case 'time-limit-reached':
-        return selectedProfile ? (
+        return selectedProfile && sessionId ? (
           <TimeLimitReached
             profile={selectedProfile}
             accountName={accountName}
+            sessionId={sessionId}
             onBackToProfiles={handleBackToProfiles}
             onExtendTime={() => {
               // Go back to game dashboard with refreshed session

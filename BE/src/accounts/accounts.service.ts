@@ -148,4 +148,16 @@ export class AccountsService {
 
     return await this.userSessionRepository.save(session);
   }
+
+  async extendSessionTime(sessionId: string, additionalMinutes: number): Promise<UserSession> {
+    const session = await this.userSessionRepository.findOne({
+      where: { id: sessionId }
+    });
+    if (!session) throw new NotFoundException('Session not found');
+
+    session.totalMinutes = Math.max(0, session.totalMinutes - additionalMinutes);
+    session.endTime = new Date();
+
+    return await this.userSessionRepository.save(session);
+  }
 }

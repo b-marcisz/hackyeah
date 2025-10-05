@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Platform, Image, Alert } from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Profile } from './ProfileSelection';
 import { useSession } from '../hooks/useSession';
@@ -9,7 +9,7 @@ interface GameDashboardProps {
   accountName: string;
   onSelectGame: (gameId: string) => void;
   onBackToProfiles: () => void;
-  onTimeExpired: () => void;
+  onTimeExpired: (sessionId: string) => void;
 }
 
 interface Game {
@@ -33,9 +33,18 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
     );
   }, []);
 
+  // Use a ref to store the latest session for the callback
+  const sessionRef = useRef<any>(null);
+
   const handleTimeExpired = useCallback(() => {
-    onTimeExpired();
-  }, [onTimeExpired]);
+    if (sessionRef.current?.id) {
+      onTimeExpired(sessionRef.current.id);
+    } else {
+      console.error('Time expired but session ID not available');
+      // Fallback: navigate back to profiles
+      onBackToProfiles();
+    }
+  }, [onTimeExpired, onBackToProfiles]);
 
   const { session, loading, elapsedMinutes, remainingMinutes, isExpired } = useSession({
     accountName,
@@ -44,6 +53,11 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
     onTimeWarning: handleTimeWarning,
     onTimeExpired: handleTimeExpired,
   });
+
+  // Update sessionRef whenever session changes
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   const games: Game[] = [
     { id: 'memory', name: 'Memory', iconImage: require('../../assets/memory/memory.png'), color: '#FF6B9D' },

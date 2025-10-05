@@ -146,4 +146,16 @@ export class AccountsController {
   ) {
     return this.accountsService.updateSessionTime(sessionId, body.totalMinutes);
   }
+
+  @Post('sessions/:sessionId/extend')
+  @ApiParam({ name: 'sessionId', type: String, description: 'Session ID' })
+  @ApiBody({ schema: { type: 'object', properties: { additionalMinutes: { type: 'number' } } } })
+  @ApiResponse({ status: 200, description: 'Session extended' })
+  @ApiResponse({ status: 404, description: 'Session not found' })
+  async extendSession(
+    @Param('sessionId') sessionId: string,
+    @Body() body: { additionalMinutes: number }
+  ) {
+    return this.accountsService.extendSessionTime(sessionId, body.additionalMinutes);
+  }
 }
