@@ -7,13 +7,15 @@ import AccountLogin from './src/screens/AccountLogin';
 import ProfileSelection, { Profile } from './src/screens/ProfileSelection';
 import GameDashboard from './src/screens/GameDashboard';
 import MemoryGame from './src/games/MemoryGame';
+import BalanceGame from './src/games/BalanceGame';
+import ReactionGame from './src/games/ReactionGame';
 import PinEntry from './src/screens/PinEntry';
 import AdminPanel from './src/screens/AdminPanel';
 import TimeLimitReached from './src/screens/TimeLimitReached';
 import { useProfiles } from './src/hooks/useProfiles';
 import { getStoredAccount, saveAccount, clearAccount } from './src/utils/storage';
 
-type Screen = 'loading' | 'splash' | 'account-login' | 'account-setup' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
+type Screen = 'loading' | 'splash' | 'account-login' | 'account-setup' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'balance-game' | 'reaction-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('loading');
@@ -80,6 +82,10 @@ export default function App() {
   const handleSelectGame = (gameId: string) => {
     if (gameId === 'memory') {
       setCurrentScreen('memory-game');
+    } else if (gameId === 'balance') {
+      setCurrentScreen('balance-game');
+    } else if (gameId === 'reaction') {
+      setCurrentScreen('reaction-game');
     }
     // TODO: Add other games
   };
@@ -177,6 +183,20 @@ export default function App() {
         );
       case 'memory-game':
         return <MemoryGame onBack={handleBackToGameDashboard} />;
+      case 'balance-game':
+        return selectedProfile ? (
+          <BalanceGame
+            profile={selectedProfile}
+            onBack={handleBackToGameDashboard}
+          />
+        ) : null;
+      case 'reaction-game':
+        return selectedProfile ? (
+          <ReactionGame
+            profile={selectedProfile}
+            onBack={handleBackToGameDashboard}
+          />
+        ) : null;
       case 'pin-entry':
         return (
           <PinEntry

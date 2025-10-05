@@ -129,6 +129,8 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
   const games: Game[] = [
     { id: 'memory', name: 'Memory', iconImage: require('../../assets/memory/memory.png'), color: '#FF6B9D' },
     { id: 'memory-less', name: 'Memory Less', iconImage: require('../../assets/memory/memory-loss.png'), color: '#4FACFE' },
+    { id: 'balance', name: 'Balance', iconImage: require('../../assets/games/balance.png'), color: '#43E97B' },
+    { id: 'reaction', name: 'F1 Reaction', iconImage: require('../../assets/games/reaction.png'), color: '#FFA502' },
   ];
 
   const handleSelectGame = useCallback((gameId: string) => {
@@ -236,11 +238,15 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
         )}
       </View>
 
-      <View
-        style={[
+      <ScrollView
+        horizontal={isLandscape && games.length > 3}
+        contentContainerStyle={[
           styles.gamesContainer,
-          isLandscape && styles.gamesContainerLandscape
+          isLandscape && styles.gamesContainerLandscape,
+          isLandscape && games.length > 3 && styles.gamesContainerHorizontal
         ]}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       >
         {games.map((game, index) => (
           <AnimatedGameCard
@@ -263,7 +269,7 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
         >
           <FontAwesome name="arrow-left" size={isLandscape ? 50 : 60} color="#fff" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -340,6 +346,10 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  gamesContainerHorizontal: {
+    flexWrap: 'nowrap',
+    paddingHorizontal: 20,
   },
   gameCard: {
     width: 180,
