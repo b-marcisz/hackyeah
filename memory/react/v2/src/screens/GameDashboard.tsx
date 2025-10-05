@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Platform, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions, Platform, Image, Alert } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Profile } from './ProfileSelection';
+import { useSession } from '../hooks/useSession';
 
 interface GameDashboardProps {
   profile: Profile;
+  accountName: string;
   onSelectGame: (gameId: string) => void;
   onBackToProfiles: () => void;
+  onTimeExpired: () => void;
 }
 
 interface Game {
@@ -16,10 +19,31 @@ interface Game {
   color: string;
 }
 
-export default function GameDashboard({ profile, onSelectGame, onBackToProfiles }: GameDashboardProps) {
+export default function GameDashboard({ profile, accountName, onSelectGame, onBackToProfiles, onTimeExpired }: GameDashboardProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  // Session management callbacks (memoized to prevent re-renders)
+  const handleTimeWarning = useCallback(() => {
+    Alert.alert(
+      'Uwaga!',
+      'Pozostało tylko 5 minut czasu gry!',
+      [{ text: 'OK' }]
+    );
+  }, []);
+
+  const handleTimeExpired = useCallback(() => {
+    onTimeExpired();
+  }, [onTimeExpired]);
+
+  const { session, loading, elapsedMinutes, remainingMinutes, isExpired } = useSession({
+    accountName,
+    userId: profile.id,
+    timeLimit: profile.settings?.timeLimit || 30,
+    onTimeWarning: handleTimeWarning,
+    onTimeExpired: handleTimeExpired,
+  });
 
   const games: Game[] = [
     { id: 'memory', name: 'Memory', iconImage: require('../../assets/memory/memory.png'), color: '#FF6B9D' },
@@ -101,12 +125,27 @@ export default function GameDashboard({ profile, onSelectGame, onBackToProfiles 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={[styles.greeting, isLandscape && styles.greetingLandscape]}>
-          Hi {profile.name}! 👋
-        </Text>
-        <Text style={[styles.subtitle, isLandscape && styles.subtitleLandscape]}>
-          What do you want to play?
-        </Text>
+        <View style={styles.headerContent}>
+          <Text style={[styles.greeting, isLandscape && styles.greetingLandscape]}>
+            Hi {profile.name}! 👋
+          </Text>
+          <Text style={[styles.subtitle, isLandscape && styles.subtitleLandscape]}>
+            What do you want to play?
+          </Text>
+        </View>
+
+        {!loading && (
+          <View style={styles.timeContainer}>
+            <FontAwesome name="clock-o" size={isLandscape ? 18 : 24} color={remainingMinutes <= 5 ? '#FF6B6B' : '#4FACFE'} />
+            <Text style={[
+              styles.timeText,
+              isLandscape && styles.timeTextLandscape,
+              remainingMinutes <= 5 && styles.timeTextWarning
+            ]}>
+              {remainingMinutes} min
+            </Text>
+          </View>
+        )}
       </View>
 
       <View
@@ -162,6 +201,35 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(79, 172, 254, 0.1)',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'rgba(79, 172, 254, 0.3)',
+  },
+  timeText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4FACFE',
+  },
+  timeTextLandscape: {
+    fontSize: 16,
+  },
+  timeTextWarning: {
+    color: '#FF6B6B',
   },
   greeting: {
     fontSize: 40,

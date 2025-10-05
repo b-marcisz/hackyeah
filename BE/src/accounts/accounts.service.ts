@@ -66,6 +66,11 @@ export class AccountsService {
     if (!user) {
       return false;
     }
+
+    // Delete all sessions for this user first to avoid foreign key constraint violation
+    await this.userSessionRepository.delete({ user: { id: userId } });
+
+    // Now delete the user
     await this.userRepository.delete(userId);
     return true;
   }

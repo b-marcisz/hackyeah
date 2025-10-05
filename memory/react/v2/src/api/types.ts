@@ -62,6 +62,16 @@ export interface UserDto {
   settings?: UserSettings;
 }
 
+export interface UserSessionDto {
+  id: string;
+  userId: string;
+  startTime: string;
+  endTime?: string;
+  totalMinutes: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AccountDto {
   id: string;
   users: UserDto[];

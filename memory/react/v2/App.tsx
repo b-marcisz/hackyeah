@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, StatusBar, ActivityIndicator } from 'react-native';
+import { View, StatusBar, ActivityIndicator, Platform } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 import SplashScreen from './src/screens/SplashScreen';
 import AccountSetup from './src/screens/AccountSetup';
 import AccountLogin from './src/screens/AccountLogin';
@@ -23,6 +24,15 @@ export default function App() {
 
   // Fetch profiles from API
   const { profiles, refreshProfiles } = useProfiles(accountName);
+
+  // Hide navigation bar on Android
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      NavigationBar.setVisibilityAsync('hidden');
+      NavigationBar.setBehaviorAsync('overlay-swipe');
+      NavigationBar.setBackgroundColorAsync('#141414');
+    }
+  }, []);
 
   // Check if account exists in storage on app start
   useEffect(() => {
@@ -140,8 +150,10 @@ export default function App() {
         return selectedProfile ? (
           <GameDashboard
             profile={selectedProfile}
+            accountName={accountName}
             onSelectGame={handleSelectGame}
             onBackToProfiles={handleBackToProfiles}
+            onTimeExpired={handleTimeLimitReached}
           />
         ) : (
           <ProfileSelection
@@ -180,7 +192,12 @@ export default function App() {
         return selectedProfile ? (
           <TimeLimitReached
             profile={selectedProfile}
+            accountName={accountName}
             onBackToProfiles={handleBackToProfiles}
+            onExtendTime={() => {
+              // Go back to game dashboard with refreshed session
+              setCurrentScreen('game-dashboard');
+            }}
           />
         ) : (
           <ProfileSelection

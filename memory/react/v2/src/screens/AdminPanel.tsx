@@ -109,7 +109,7 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
           style: 'destructive',
           onPress: async () => {
             try {
-              await accountsService.deleteUser(accountName, profileId, pin);
+              await accountsService.deleteUser(accountName, profileId);
               Alert.alert('Success', `Profile "${profileName}" deleted successfully!`);
 
               // Refresh profiles list

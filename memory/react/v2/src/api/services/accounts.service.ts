@@ -1,5 +1,5 @@
 import apiClient from '../client';
-import { CreateAccountDto, CreateUserDto, UpdateUserDto, AccountDto } from '../types';
+import { CreateAccountDto, CreateUserDto, UpdateUserDto, AccountDto, UserSessionDto } from '../types';
 
 export const accountsService = {
   /**
@@ -80,8 +80,34 @@ export const accountsService = {
   /**
    * Delete user from account
    */
-  deleteUser: async (accountName: string, userId: string, pin: string): Promise<{ success: boolean }> => {
-    const response = await apiClient.delete(`/accounts/${accountName}/users/${userId}`, { data: { code: pin } });
+  deleteUser: async (accountName: string, userId: string): Promise<{ success: boolean }> => {
+    const response = await apiClient.delete(`/accounts/${accountName}/users/${userId}`);
     return response.data;
+  },
+
+  /**
+   * Create a new session for user
+   * POST /accounts/{accountName}/users/{userId}/sessions
+   */
+  createSession: async (accountName: string, userId: string): Promise<UserSessionDto> => {
+    const response = await apiClient.post<UserSessionDto>(`/accounts/${accountName}/users/${userId}/sessions`);
+    return response.data;
+  },
+
+  /**
+   * Get today's session for user
+   * GET /accounts/{accountName}/users/{userId}/sessions/today
+   */
+  getTodaySession: async (accountName: string, userId: string): Promise<UserSessionDto | null> => {
+    try {
+      const response = await apiClient.get<UserSessionDto>(`/accounts/${accountName}/users/${userId}/sessions/today`);
+      return response.data;
+    } catch (error: any) {
+      // If no session today, return null
+      if (error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
   },
 };

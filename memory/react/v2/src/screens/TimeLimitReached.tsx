@@ -1,21 +1,27 @@
-import { StyleSheet, Text, View, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, useWindowDimensions, TextInput, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Profile } from './ProfileSelection';
+import { accountsService } from '../api';
 
 interface TimeLimitReachedProps {
   profile: Profile;
+  accountName: string;
   onBackToProfiles: () => void;
+  onExtendTime: () => void;
 }
 
-export default function TimeLimitReached({ profile, onBackToProfiles }: TimeLimitReachedProps) {
+export default function TimeLimitReached({ profile, accountName, onBackToProfiles, onExtendTime }: TimeLimitReachedProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(10);
+  const [showPinInput, setShowPinInput] = useState(false);
+  const [pin, setPin] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  // Auto redirect after 5 seconds
+  // Auto redirect after 10 seconds
   useEffect(() => {
-    if (countdown === 0) {
+    if (countdown === 0 && !showPinInput) {
       onBackToProfiles();
       return;
     }
@@ -25,7 +31,37 @@ export default function TimeLimitReached({ profile, onBackToProfiles }: TimeLimi
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [countdown, onBackToProfiles]);
+  }, [countdown, showPinInput, onBackToProfiles]);
+
+  const handleExtendTime = () => {
+    setShowPinInput(true);
+  };
+
+  const handleVerifyPin = async () => {
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      Alert.alert('Błąd', 'PIN musi składać się z 4 cyfr');
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      const isValid = await accountsService.verifyPin(accountName, pin);
+
+      if (isValid) {
+        Alert.alert('Sukces', 'Czas przedłużony!', [
+          { text: 'OK', onPress: onExtendTime }
+        ]);
+      } else {
+        Alert.alert('Błąd', 'Nieprawidłowy PIN');
+        setPin('');
+      }
+    } catch (error) {
+      console.error('Error verifying PIN:', error);
+      Alert.alert('Błąd', 'Nie udało się zweryfikować PIN');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -49,24 +85,86 @@ export default function TimeLimitReached({ profile, onBackToProfiles }: TimeLimi
           </Text>
         </View>
 
-        {/* Countdown */}
-        <View style={styles.countdownContainer}>
-          <Text style={[styles.countdownText, isLandscape && styles.countdownTextLandscape]}>
-            Powrót za {countdown}...
-          </Text>
-        </View>
+        {!showPinInput ? (
+          <>
+            {/* Countdown */}
+            <View style={styles.countdownContainer}>
+              <Text style={[styles.countdownText, isLandscape && styles.countdownTextLandscape]}>
+                Powrót za {countdown}...
+              </Text>
+            </View>
 
-        {/* Manual back button */}
-        <TouchableOpacity
-          style={[styles.button, isLandscape && styles.buttonLandscape]}
-          onPress={onBackToProfiles}
-          activeOpacity={0.7}
-        >
-          <FontAwesome name="arrow-left" size={isLandscape ? 20 : 24} color="#fff" />
-          <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
-            Wróć teraz
-          </Text>
-        </TouchableOpacity>
+            {/* Buttons */}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.extendButton, isLandscape && styles.buttonLandscape]}
+                onPress={handleExtendTime}
+                activeOpacity={0.7}
+              >
+                <FontAwesome name="clock-o" size={isLandscape ? 20 : 24} color="#fff" />
+                <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
+                  Przedłuż czas
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, isLandscape && styles.buttonLandscape]}
+                onPress={onBackToProfiles}
+                activeOpacity={0.7}
+              >
+                <FontAwesome name="arrow-left" size={isLandscape ? 20 : 24} color="#fff" />
+                <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
+                  Wyjdź
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            {/* PIN Input */}
+            <View style={styles.pinContainer}>
+              <Text style={styles.pinLabel}>Wpisz PIN rodzica:</Text>
+              <TextInput
+                style={styles.pinInput}
+                value={pin}
+                onChangeText={setPin}
+                placeholder="••••"
+                placeholderTextColor="rgba(255, 255, 255, 0.3)"
+                keyboardType="number-pad"
+                maxLength={4}
+                secureTextEntry
+                editable={!isVerifying}
+                autoFocus
+              />
+            </View>
+
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.confirmButton, isLandscape && styles.buttonLandscape, isVerifying && styles.buttonDisabled]}
+                onPress={handleVerifyPin}
+                disabled={isVerifying || pin.length !== 4}
+                activeOpacity={0.7}
+              >
+                <FontAwesome name="check" size={isLandscape ? 20 : 24} color="#fff" />
+                <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
+                  {isVerifying ? 'Sprawdzam...' : 'Potwierdź'}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, isLandscape && styles.buttonLandscape]}
+                onPress={() => { setShowPinInput(false); setPin(''); }}
+                activeOpacity={0.7}
+                disabled={isVerifying}
+              >
+                <FontAwesome name="times" size={isLandscape ? 20 : 24} color="#fff" />
+                <Text style={[styles.buttonText, isLandscape && styles.buttonTextLandscape]}>
+                  Anuluj
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
@@ -158,5 +256,44 @@ const styles = StyleSheet.create({
   },
   buttonTextLandscape: {
     fontSize: 16,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    gap: 15,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  extendButton: {
+    backgroundColor: '#4FACFE',
+  },
+  confirmButton: {
+    backgroundColor: '#43E97B',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  pinContainer: {
+    width: '100%',
+    marginBottom: 25,
+    alignItems: 'center',
+  },
+  pinLabel: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginBottom: 12,
+  },
+  pinInput: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    fontSize: 24,
+    color: '#fff',
+    textAlign: 'center',
+    letterSpacing: 8,
+    width: 150,
   },
 });
