@@ -68,6 +68,7 @@ export interface UserSessionDto {
   startTime: string;
   endTime?: string;
   totalMinutes: number;
+  extendedMinutes: number;
   createdAt: string;
   updatedAt: string;
 }

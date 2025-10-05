@@ -22,6 +22,9 @@ export class UserSession {
   @Column({ type: 'int', default: 0 })
   totalMinutes: number;
 
+  @Column({ type: 'int', default: 0 })
+  extendedMinutes: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -46,7 +46,7 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
     }
   }, [onTimeExpired, onBackToProfiles]);
 
-  const { session, loading, elapsedMinutes, remainingMinutes, isExpired } = useSession({
+  const { session, loading, elapsedMinutes, remainingMinutes, isExpired, refreshSession } = useSession({
     accountName,
     userId: profile.id,
     timeLimit: profile.settings?.timeLimit || 30,
@@ -58,6 +58,11 @@ export default function GameDashboard({ profile, accountName, onSelectGame, onBa
   useEffect(() => {
     sessionRef.current = session;
   }, [session]);
+
+  // Refresh session when component mounts/returns to view
+  useEffect(() => {
+    refreshSession();
+  }, [refreshSession]);
 
   const games: Game[] = [
     { id: 'memory', name: 'Memory', iconImage: require('../../assets/memory/memory.png'), color: '#FF6B9D' },

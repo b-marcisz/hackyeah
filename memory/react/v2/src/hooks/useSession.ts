@@ -49,13 +49,16 @@ export const useSession = ({
       setSession(todaySession);
       setElapsedMinutes(todaySession.totalMinutes || 0);
 
+      // Calculate effective time limit with extensions
+      const effectiveTimeLimit = timeLimit + (todaySession.extendedMinutes || 0);
+
       // Check if already exceeded on re-entry
-      if (todaySession.totalMinutes >= timeLimit) {
+      if (todaySession.totalMinutes >= effectiveTimeLimit) {
         console.log('Time limit already exceeded on session initialization');
         setTimeout(() => {
           onTimeExpiredRef.current();
         }, 500); // Small delay to ensure UI is ready
-      } else if (timeLimit - todaySession.totalMinutes <= 5) {
+      } else if (effectiveTimeLimit - todaySession.totalMinutes <= 5) {
         // If 5 minutes or less remaining, show warning immediately
         setHasShownWarning(true);
       }
@@ -84,8 +87,11 @@ export const useSession = ({
           console.error('Failed to update session time:', error);
         });
 
+        // Calculate effective time limit with extensions
+        const effectiveTimeLimit = timeLimit + (session.extendedMinutes || 0);
+
         // Check for 5-minute warning
-        const remainingMinutes = timeLimit - newElapsed;
+        const remainingMinutes = effectiveTimeLimit - newElapsed;
         if (remainingMinutes === 5 && !hasShownWarning) {
           console.log('5 minutes remaining!');
           setHasShownWarning(true);
@@ -93,7 +99,7 @@ export const useSession = ({
         }
 
         // Check if time exceeded
-        if (newElapsed >= timeLimit) {
+        if (newElapsed >= effectiveTimeLimit) {
           console.log('Time limit exceeded!');
           onTimeExpiredRef.current();
         }
@@ -105,17 +111,17 @@ export const useSession = ({
     return () => clearInterval(interval);
   }, [session, loading, timeLimit, hasShownWarning]);
 
-  const remainingMinutes = useMemo(
-    () => Math.max(0, timeLimit - elapsedMinutes),
-    [timeLimit, elapsedMinutes]
-  );
+  const remainingMinutes = useMemo(() => {
+    const effectiveTimeLimit = timeLimit + (session?.extendedMinutes || 0);
+    return Math.max(0, effectiveTimeLimit - elapsedMinutes);
+  }, [timeLimit, elapsedMinutes, session?.extendedMinutes]);
 
   return {
     session,
     loading,
     elapsedMinutes,
     remainingMinutes,
-    isExpired: elapsedMinutes >= timeLimit,
+    isExpired: elapsedMinutes >= (timeLimit + (session?.extendedMinutes || 0)),
     refreshSession: initializeSession,
   };
 };

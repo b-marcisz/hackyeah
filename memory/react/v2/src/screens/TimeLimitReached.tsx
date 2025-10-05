@@ -9,7 +9,7 @@ interface TimeLimitReachedProps {
   accountName: string;
   sessionId: string;
   onBackToProfiles: () => void;
-  onExtendTime: () => void;
+  onExtendTime: (extendedMinutes: number) => void;
 }
 
 export default function TimeLimitReached({ profile, accountName, sessionId, onBackToProfiles, onExtendTime }: TimeLimitReachedProps) {
@@ -28,6 +28,10 @@ export default function TimeLimitReached({ profile, accountName, sessionId, onBa
       return;
     }
 
+    if (showPinInput) {
+      return; // Don't countdown when PIN input is shown
+    }
+
     const timer = setTimeout(() => {
       setCountdown(prev => prev - 1);
     }, 1000);
@@ -37,6 +41,7 @@ export default function TimeLimitReached({ profile, accountName, sessionId, onBa
 
   const handleExtendTime = () => {
     setShowPinInput(true);
+    setCountdown(10); // Reset countdown when showing PIN input
   };
 
   const handleVerifyPin = async () => {
@@ -59,7 +64,7 @@ export default function TimeLimitReached({ profile, accountName, sessionId, onBa
         await accountsService.extendSessionTime(sessionId, selectedMinutes);
 
         Alert.alert('Success', `Time extended by ${selectedMinutes} minutes!`, [
-          { text: 'OK', onPress: onExtendTime }
+          { text: 'OK', onPress: () => onExtendTime(selectedMinutes) }
         ]);
       } else {
         Alert.alert('Error', 'Invalid PIN');

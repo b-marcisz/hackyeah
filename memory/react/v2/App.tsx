@@ -197,8 +197,9 @@ export default function App() {
             accountName={accountName}
             sessionId={sessionId}
             onBackToProfiles={handleBackToProfiles}
-            onExtendTime={() => {
+            onExtendTime={(extendedMinutes) => {
               // Go back to game dashboard with refreshed session
+              // The extended minutes info is passed but GameDashboard will refresh from backend
               setCurrentScreen('game-dashboard');
             }}
           />

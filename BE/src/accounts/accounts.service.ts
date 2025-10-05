@@ -155,7 +155,7 @@ export class AccountsService {
     });
     if (!session) throw new NotFoundException('Session not found');
 
-    session.totalMinutes = Math.max(0, session.totalMinutes - additionalMinutes);
+    session.extendedMinutes += additionalMinutes;
     session.endTime = new Date();
 
     return await this.userSessionRepository.save(session);
