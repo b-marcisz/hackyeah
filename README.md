@@ -1,4 +1,8 @@
 # hackyeah
+requirements:
+ - node js
+ - postgres
+
 
 ## How to start
 
