@@ -11,7 +11,7 @@ import PinEntry from './src/screens/PinEntry';
 import AdminPanel from './src/screens/AdminPanel';
 import TimeLimitReached from './src/screens/TimeLimitReached';
 import { useProfiles } from './src/hooks/useProfiles';
-import { getStoredAccount, saveAccount } from './src/utils/storage';
+import { getStoredAccount, saveAccount, clearAccount } from './src/utils/storage';
 
 type Screen = 'loading' | 'splash' | 'account-login' | 'account-setup' | 'profile-selection' | 'game-dashboard' | 'memory-game' | 'pin-entry' | 'admin-panel' | 'time-limit-reached';
 
@@ -117,6 +117,17 @@ export default function App() {
     setCurrentScreen('profile-selection');
   };
 
+  const handleLogout = async () => {
+    // Clear account data from storage
+    await clearAccount();
+
+    // Clear state and return to login
+    setAccountName('');
+    setVerifiedPin(null);
+    setSelectedProfile(null);
+    setCurrentScreen('account-login');
+  };
+
   const handleTimeLimitReached = (currentSessionId: string) => {
     setSessionId(currentSessionId);
     setCurrentScreen('time-limit-reached');
@@ -182,6 +193,7 @@ export default function App() {
             onProfileAdded={refreshProfiles}
             pin={verifiedPin}
             accountName={accountName}
+            onLogout={handleLogout}
           />
         ) : (
           <ProfileSelection

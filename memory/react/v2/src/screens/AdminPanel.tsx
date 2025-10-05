@@ -11,6 +11,7 @@ interface AdminPanelProps {
   onProfileAdded?: () => void; // Callback to refresh profiles
   pin: string; // Verified PIN for API calls
   accountName: string; // Account name for API calls
+  onLogout?: () => void; // Callback to logout account
 }
 
 interface TimeLimit {
@@ -19,7 +20,7 @@ interface TimeLimit {
   maxMinutesPerDay: number;
 }
 
-export default function AdminPanel({ profiles, onBack, initialTab = 'settings', onProfileAdded, pin, accountName }: AdminPanelProps) {
+export default function AdminPanel({ profiles, onBack, initialTab = 'settings', onProfileAdded, pin, accountName, onLogout }: AdminPanelProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [activeTab, setActiveTab] = useState<'settings' | 'add-profile'>(initialTab);
@@ -131,6 +132,25 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
             } catch (error: any) {
               console.error('Error deleting profile:', error);
               Alert.alert('Error', error.response?.data?.message || 'Failed to delete profile');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout from this account?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => {
+            if (onLogout) {
+              onLogout();
             }
           },
         },
@@ -324,11 +344,25 @@ export default function AdminPanel({ profiles, onBack, initialTab = 'settings', 
         })}
 
         {activeTab === 'settings' && (
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              💡 Settings are saved automatically
-            </Text>
-          </View>
+          <>
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                💡 Settings are saved automatically
+              </Text>
+            </View>
+
+            {/* Logout button */}
+            {onLogout && (
+              <TouchableOpacity
+                style={styles.logoutButton}
+                onPress={handleLogout}
+                activeOpacity={0.7}
+              >
+                <FontAwesome name="sign-out" size={20} color="#FF6B6B" />
+                <Text style={styles.logoutButtonText}>Logout from Account</Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
 
         {/* Add Profile Tab */}
@@ -670,5 +704,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 107, 107, 0.3)',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B6B',
   },
 });

@@ -87,7 +87,7 @@ export default function PinEntry({ onPinCorrect, onBack }: PinEntryProps) {
       <View style={[styles.content, isLandscape && styles.contentLandscape]}>
         <View style={styles.leftSection}>
           <Text style={[styles.title, isLandscape && styles.titleLandscape]}>
-            Wprowadź PIN
+            Enter PIN
           </Text>
 
           {/* PIN dots display */}
